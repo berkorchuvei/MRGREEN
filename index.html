@@ -72,23 +72,37 @@
   function injectTrialBanner(remaining, isFirst) {
     var inject = function() {
       var styles = '<style id="mrgreen-trial-style">' +
-        '#mrgreen-trial-bar {' +
-          'position:fixed;top:0;left:0;right:0;z-index:9999;' +
-          'background:linear-gradient(135deg,#141417,#1a1a1f);' +
-          'border-bottom:1px solid rgba(245,158,11,.4);' +
+        '#mrgreen-trial-bar{position:fixed;top:0;left:0;right:0;z-index:9999;' +
+          'background:linear-gradient(135deg,#060708,#0c0e0b);' +
+          'border-bottom:2px solid rgba(34,197,94,.3);' +
           'padding:10px 16px;display:flex;align-items:center;' +
-          'justify-content:space-between;flex-wrap:wrap;gap:10px;' +
-          'font-family:system-ui,sans-serif;' +
-          'box-shadow:0 4px 24px rgba(0,0,0,.5);' +
-        '}' +
-        '#mrgreen-trial-bar .tbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}' +
-        '#mrgreen-trial-bar .tbar-icon{font-size:18px;}' +
-        '#mrgreen-trial-bar .tbar-text{color:#D1D5DB;font-size:.82rem;line-height:1.4;}' +
-        '#mrgreen-trial-bar .tbar-text strong{color:#F59E0B;}' +
-        '#mrgreen-trial-bar .tbar-countdown{font-weight:700;color:#F59E0B;font-variant-numeric:tabular-nums;font-size:.95rem;}' +
-        '#mrgreen-trial-bar .tbar-btn{background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:600;font-size:.82rem;cursor:pointer;white-space:nowrap;font-family:inherit;}' +
-        '#mrgreen-trial-bar .tbar-btn:hover{opacity:.9;}' +
-        'body{padding-top:56px!important;}' +
+          'justify-content:space-between;flex-wrap:wrap;gap:8px;' +
+          'font-family:"DM Sans",system-ui,sans-serif;' +
+          'box-shadow:0 4px 24px rgba(0,0,0,.7),0 0 40px rgba(34,197,94,.04);}' +
+        '#mrgreen-trial-bar .tbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1;min-width:0;}' +
+        '#mrgreen-trial-bar .tbar-pulse{width:7px;height:7px;border-radius:50%;background:#22C55E;flex-shrink:0;box-shadow:0 0 8px #22C55E;animation:mgpulse 1.5s ease-in-out infinite;}' +
+        '@keyframes mgpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}' +
+        '#mrgreen-trial-bar .tbar-text{color:#9CA3AF;font-size:.82rem;line-height:1.4;}' +
+        '#mrgreen-trial-bar .tbar-text strong{color:#fff;}' +
+        '#mrgreen-trial-bar .tbar-countdown{font-weight:700;color:#22C55E;font-variant-numeric:tabular-nums;font-size:.88rem;font-family:"DM Mono",monospace;}' +
+        '#mrgreen-trial-bar .tbar-actions{display:flex;gap:7px;align-items:center;flex-shrink:0;}' +
+        '#mrgreen-trial-bar .tbar-login{background:transparent;border:1px solid rgba(34,197,94,.25);color:#6B7280;border-radius:7px;padding:6px 12px;font-size:.75rem;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;}' +
+        '#mrgreen-trial-bar .tbar-login:hover{border-color:#22C55E;color:#22C55E;}' +
+        '#mrgreen-trial-bar .tbar-btn{background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;border:none;border-radius:7px;padding:7px 15px;font-weight:700;font-size:.78rem;cursor:pointer;white-space:nowrap;font-family:inherit;box-shadow:0 0 16px rgba(34,197,94,.25);transition:opacity .2s;}' +
+        '#mrgreen-trial-bar .tbar-btn:hover{opacity:.88;}' +
+        'body{padding-top:52px!important;}' +
+        '#mg-modal{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:16px;font-family:"DM Sans",system-ui,sans-serif;backdrop-filter:blur(4px);}' +
+        '#mg-modal.open{display:flex;}' +
+        '#mg-modal .mbox{background:#0a0a0d;border:1px solid rgba(34,197,94,.2);border-radius:16px;padding:30px 26px;max-width:380px;width:100%;position:relative;box-shadow:0 0 60px rgba(34,197,94,.07);}' +
+        '#mg-modal .mcls{position:absolute;top:13px;right:15px;background:none;border:none;color:#374151;font-size:1.1rem;cursor:pointer;transition:color .2s;}' +
+        '#mg-modal .mcls:hover{color:#9CA3AF;}' +
+        '#mg-modal h3{font-weight:700;font-size:.95rem;color:#fff;margin-bottom:3px;}' +
+        '#mg-modal .msub{font-size:.78rem;color:#6B7280;margin-bottom:18px;}' +
+        '#mg-modal input{width:100%;background:#060607;border:1px solid #1a1a1f;border-radius:8px;padding:11px 13px;color:#fff;font-size:.9rem;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:10px;transition:border-color .2s;}' +
+        '#mg-modal input:focus{border-color:#22C55E;}' +
+        '#mg-modal .mmsg{font-size:.78rem;min-height:16px;margin-bottom:10px;}' +
+        '#mg-modal .msbtn{width:100%;background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(34,197,94,.2);}' +
+        '#mg-modal .msbtn:disabled{opacity:.5;cursor:not-allowed;}' +
         '</style>';
 
       document.head.insertAdjacentHTML('beforeend', styles);
@@ -99,11 +113,29 @@
         ? '<strong>Bem-vindo! Seu trial gratuito de 24h comeou agora.</strong> Aproveite por: '
         : 'Seu <strong>periodo gratuito</strong> encerra em: ';
       bar.innerHTML = '<div class="tbar-left">' +
-        '<span class="tbar-icon">\u23F3</span>' +
+        '<span class="tbar-pulse"></span>' +
         '<div class="tbar-text">' + msg +
         '<span class="tbar-countdown" id="tbar-cd">' + formatMs(remaining) + '</span>' +
         '</div></div>' +
-        '<button class="tbar-btn" onclick="window.location.href=\'paywall.html\'">&#x1F513; Assinar e continuar</button>';
+        '<div class="tbar-actions">' +
+        '<button class="tbar-login" onclick="MgOpen()">Ja sou assinante</button>' +
+        '<button class="tbar-btn" onclick="window.location.href=\'paywall.html\'">Assinar agora</button>' +
+        '</div>';
+
+      // Modal
+      if (!document.getElementById('mg-modal')) {
+        var modal = document.createElement('div');
+        modal.id = 'mg-modal';
+        modal.innerHTML = '<div class="mbox"><button class="mcls" onclick="MgClose()">&times;</button>' +
+          '<h3>&#128273; Ja sou Assinante</h3>' +
+          '<p class="msub">Digite o e-mail usado no pagamento</p>' +
+          '<input id="mg-em" type="email" placeholder="seu@email.com"/>' +
+          '<div class="mmsg" id="mg-msg"></div>' +
+          '<button class="msbtn" id="mg-sb" onclick="MgLogin()">Verificar acesso</button></div>';
+        document.body.appendChild(modal);
+        document.getElementById('mg-em').addEventListener('keydown', function(e){ if(e.key==='Enter') window.MgLogin(); });
+      }
+
       document.body.prepend(bar);
 
       var ms = remaining;
@@ -124,6 +156,38 @@
       window.addEventListener('load', inject);
     }
   }
+
+
+  window.MgOpen = function() {
+    var m = document.getElementById('mg-modal');
+    if (m) { m.className = 'open'; setTimeout(function(){ var e = document.getElementById('mg-em'); if(e) e.focus(); }, 80); }
+  };
+  window.MgClose = function() {
+    var m = document.getElementById('mg-modal'); if(m) m.className = '';
+    var msg = document.getElementById('mg-msg'); if(msg) msg.textContent = '';
+    var i = document.getElementById('mg-em'); if(i) i.value = '';
+  };
+  window.MgLogin = async function() {
+    var SB_URL = 'https://lgwqjhydasdnxxalpglm.supabase.co';
+    var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxnd3FqaHlkYXNkbnh4YWxwZ2xtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzkwNTUsImV4cCI6MjA5MzE1NTA1NX0.c5Pu51dQwWAwYOIJRQgJVG8MApBpmg_k_r8A9Ip_bRM';
+    var SK = 'mrgreen_session';
+    var i=document.getElementById('mg-em'), msg=document.getElementById('mg-msg'), btn=document.getElementById('mg-sb');
+    if(!i||!msg||!btn) return;
+    var email=i.value.trim().toLowerCase();
+    if(!email||email.indexOf('@')<0){msg.style.color='#EF4444';msg.textContent='E-mail invalido.';return;}
+    btn.textContent='Verificando...';btn.disabled=true;msg.style.color='#6B7280';msg.textContent='Consultando...';
+    try {
+      var r=await fetch(SB_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=*',
+        {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      var d=await r.json(); var user=d&&d.length>0?d[0]:null;
+      if(!user){msg.style.color='#EF4444';msg.textContent='E-mail nao encontrado.';btn.textContent='Verificar acesso';btn.disabled=false;return;}
+      var active=user.plan==='lifetime'||(user.plan==='monthly'&&user.expires_at&&new Date(user.expires_at)>new Date());
+      if(!active){msg.style.color='#EF4444';msg.textContent='Plano expirado.';btn.textContent='Verificar acesso';btn.disabled=false;return;}
+      localStorage.setItem(SK,JSON.stringify({email:user.email,plan:user.plan,checked:Date.now(),expires_at:user.expires_at||null}));
+      msg.style.color='#22C55E';msg.textContent='Acesso liberado! Carregando...';
+      setTimeout(function(){window.location.reload();},900);
+    } catch(e){msg.style.color='#EF4444';msg.textContent='Erro de conexao.';btn.textContent='Verificar acesso';btn.disabled=false;}
+  };
 
 })();
 </script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preload" href="/_next/static/media/e4af272ccee01ff0-s.p.woff2" as="font" crossorigin="" type="font/woff2"><link rel="stylesheet" href="css/65cd5c3497cc4293.css" data-precedence="next"><link rel="preload" as="script" fetchpriority="low" href="/_next/static/chunks/webpack-80b1d124ec145803.js"><script src="js/8490244b-88dcbd25b7c53cd9.js" async=""></script><script src="js/571-d1d9b75d7dc9a77a.js" async=""></script><script src="js/main-app-d1cf215c4567dde7.js" async=""></script><script src="js/layout-7d226019e797eb97.js" async=""></script><script src="js/880-d6ae298848f42cad.js" async=""></script><script src="js/page-824e9864b055145c.js" async=""></script><meta name="next-size-adjust" content=""><title>IA de Trading por Print</title><meta name="description" content="Análise inteligente de gráficos de trading com IA"><link rel="icon" href="images/favicon.ico" type="image/x-icon" sizes="16x16"><script src="js/polyfills-42372ed130431b0a.js" nomodule=""></script>
