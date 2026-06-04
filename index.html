@@ -209,6 +209,7 @@
   };
 
 
+
   // ── Timeframe Selector ──────────────────────────────────
   window.MG_TIMEFRAME = localStorage.getItem('mg_tf') || '1MIN';
 
@@ -223,61 +224,37 @@
 
   function buildTFCard() {
     var tf = window.MG_TIMEFRAME;
-    var wrap = document.createElement('div');
-    wrap.id = 'mg-tf-card';
-    wrap.innerHTML =
+    var card = document.createElement('div');
+    card.id = 'mg-tf-card';
+    card.innerHTML =
       '<div class="tf-hdr">' +
         '<div class="tf-ico"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>' +
         '<div><div class="tf-ttl">Escolha o Timeframe</div>' +
         '<div class="tf-sub">Tempo de expiração dos sinais gerados</div></div>' +
       '</div>' +
       '<div class="tf-opts">' +
-        '<div class="tf-opt'+(tf==='1MIN'?' active':'')+'" id="tf-1min" onclick="MgSetTF('1MIN')">' +
+        '<div class="tf-opt' + (tf==='1MIN'?' active':'') + '" id="tf-1min" onclick="MgSetTF('1MIN')">' +
           '<div class="tf-chk"></div><div class="tf-val">1 MIN</div><div class="tf-dsc">Operações rápidas</div>' +
         '</div>' +
-        '<div class="tf-opt'+(tf==='5MIN'?' active':'')+'" id="tf-5min" onclick="MgSetTF('5MIN')">' +
+        '<div class="tf-opt' + (tf==='5MIN'?' active':'') + '" id="tf-5min" onclick="MgSetTF('5MIN')">' +
           '<div class="tf-chk"></div><div class="tf-val">5 MIN</div><div class="tf-dsc">Operações moderadas</div>' +
         '</div>' +
       '</div>';
-    return wrap;
+    return card;
   }
 
-  function injectTFCard() {
-    // Already there? Skip
-    if (document.getElementById('mg-tf-card')) return;
-    // Find the upload card ("Selecionar Gráfico")
-    var allCards = document.querySelectorAll('.rounded-xl.border');
-    var uploadCard = null;
-    allCards.forEach(function(card) {
-      if (card.textContent.indexOf('Selecionar') > -1 && card.textContent.indexOf('file-input') === -1 && uploadCard === null) {
-        uploadCard = card;
-      }
+  // Polls until the upload card appears, inserts once, then stops
+  var tfTimer = setInterval(function() {
+    if (document.getElementById('mg-tf-card')) { clearInterval(tfTimer); return; }
+    var upload = null;
+    document.querySelectorAll('.rounded-xl').forEach(function(el) {
+      if (!upload && el.querySelector('input[type="file"]')) upload = el;
     });
-    // Fallback: find by the max-w-2xl wrapper
-    if (!uploadCard) {
-      var w = document.querySelector('.max-w-2xl');
-      if (w) uploadCard = w;
-    }
-    if (!uploadCard) return;
-    var parent = uploadCard.closest('.max-w-2xl') || uploadCard.parentNode;
-    parent.parentNode.insertBefore(buildTFCard(), parent);
-  }
-
-  // Watch for React re-renders and reinsert if removed
-  var tfObserver = new MutationObserver(function() {
-    if (!document.getElementById('mg-tf-card')) {
-      injectTFCard();
-    }
-  });
-
-  function startTFObserver() {
-    var target = document.querySelector('.min-h-screen') || document.body;
-    tfObserver.observe(target, { childList: true, subtree: true });
-    injectTFCard();
-  }
-
-  if (document.readyState === 'complete') startTFObserver();
-  else window.addEventListener('load', startTFObserver);
+    if (!upload) return;
+    var wrapper = upload.closest('.max-w-2xl') || upload.parentNode;
+    wrapper.parentNode.insertBefore(buildTFCard(), wrapper);
+    clearInterval(tfTimer);
+  }, 300);
 
 
 })();
@@ -350,6 +327,7 @@ h1.text-4xl{
 #mg-broker-btn:hover{transform:translateY(-2px);
   box-shadow:0 0 44px rgba(34,197,94,.38),0 8px 24px rgba(0,0,0,.5);}
 #mg-broker-btn svg{width:18px;height:18px;flex-shrink:0;}
+
 
 /* ── Timeframe Selector ─────────────────────────────────── */
 #mg-tf-card{background:#0f0f12;border:1px solid #1a1a1f;border-radius:14px;
