@@ -177,55 +177,6 @@
   setTimeout(injectBrokerBtn, 500);
   setTimeout(injectBrokerBtn, 1500);
 
-
-  // ── Timeframe Selector ──────────────────────────────────
-  window.MG_TIMEFRAME = localStorage.getItem('mg_tf') || '1MIN';
-
-  function injectTFSelector() {
-    if (document.getElementById('mg-tf-card')) return;
-    var cards = document.querySelectorAll('.rounded-xl.border');
-    var warningCard = null;
-    cards.forEach(function(c) {
-      if (c.textContent.indexOf('Sem garantias') > -1) warningCard = c;
-    });
-    if (!warningCard) return;
-    var tf = window.MG_TIMEFRAME;
-    var card = document.createElement('div');
-    card.id = 'mg-tf-card';
-    card.innerHTML =
-      '<div class="tf-hdr">' +
-        '<div class="tf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>' +
-        '<div><div class="tf-ttl">Escolha o Timeframe</div>' +
-        '<div class="tf-sub">Tempo de expiração dos sinais gerados</div></div>' +
-      '</div>' +
-      '<div class="tf-opts">' +
-        '<div class="tf-opt'+(tf==='1MIN'?' active':'')+'" onclick="MgSetTF('1MIN')">' +
-          '<div class="tf-chk"></div><div class="tf-val">1 MIN</div><div class="tf-dsc">Operações rápidas</div>' +
-        '</div>' +
-        '<div class="tf-opt'+(tf==='5MIN'?' active':'')+'" onclick="MgSetTF('5MIN')">' +
-          '<div class="tf-chk"></div><div class="tf-val">5 MIN</div><div class="tf-dsc">Operações moderadas</div>' +
-        '</div>' +
-      '</div>';
-    warningCard.parentNode.insertBefore(card, warningCard.nextSibling);
-  }
-
-  window.MgSetTF = function(val) {
-    window.MG_TIMEFRAME = val;
-    localStorage.setItem('mg_tf', val);
-    document.querySelectorAll('.tf-opt').forEach(function(opt) {
-      var v = opt.querySelector('.tf-val');
-      if (!v) return;
-      var match = (val==='1MIN' && v.textContent.trim()==='1 MIN') ||
-                  (val==='5MIN' && v.textContent.trim()==='5 MIN');
-      opt.className = 'tf-opt' + (match ? ' active' : '');
-    });
-  };
-
-  if (document.readyState==='complete') injectTFSelector();
-  else window.addEventListener('load', injectTFSelector);
-  setTimeout(injectTFSelector, 600);
-  setTimeout(injectTFSelector, 1600);
-
   window.MgOpen = function() {
     var m = document.getElementById('mg-modal');
     if (m) { m.className = 'open'; setTimeout(function(){ var e = document.getElementById('mg-em'); if(e) e.focus(); }, 80); }
@@ -327,35 +278,5 @@ h1.text-4xl{
 #mg-broker-btn:hover{transform:translateY(-2px);
   box-shadow:0 0 44px rgba(34,197,94,.38),0 8px 24px rgba(0,0,0,.5);}
 #mg-broker-btn svg{width:18px;height:18px;flex-shrink:0;}
-
-/* ── Timeframe Selector Card ────────────────────────────── */
-#mg-tf-card{background:#0f0f12;border:1px solid #1a1a1f;border-radius:14px;
-  padding:22px 24px;position:relative;overflow:hidden;transition:border-color .3s;}
-#mg-tf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(34,197,94,.2),transparent);}
-#mg-tf-card .tf-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-#mg-tf-card .tf-ico{width:32px;height:32px;border-radius:8px;flex-shrink:0;
-  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);
-  display:flex;align-items:center;justify-content:center;}
-#mg-tf-card .tf-ico svg{width:16px;height:16px;stroke:#22C55E;}
-#mg-tf-card .tf-ttl{font-weight:700;font-size:.95rem;color:#F9FAFB;font-family:'DM Sans',system-ui,sans-serif;}
-#mg-tf-card .tf-sub{font-size:.78rem;color:#6B7280;margin-top:1px;font-family:'DM Sans',system-ui,sans-serif;}
-#mg-tf-card .tf-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-#mg-tf-card .tf-opt{background:#080809;border:1px solid #1a1a1f;border-radius:10px;
-  padding:16px 12px;cursor:pointer;text-align:center;transition:all .2s;position:relative;}
-#mg-tf-card .tf-opt:hover{border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.03);}
-#mg-tf-card .tf-opt.active{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.06);
-  box-shadow:0 0 20px rgba(34,197,94,.08);}
-#mg-tf-card .tf-val{font-size:1.7rem;font-weight:700;line-height:1;color:#4B5563;
-  font-family:'DM Mono',monospace;transition:color .2s;margin-bottom:5px;}
-#mg-tf-card .tf-opt.active .tf-val{color:#22C55E;}
-#mg-tf-card .tf-dsc{font-size:.72rem;color:#374151;font-weight:500;transition:color .2s;}
-#mg-tf-card .tf-opt.active .tf-dsc{color:#6B7280;}
-#mg-tf-card .tf-chk{position:absolute;top:8px;right:8px;width:16px;height:16px;
-  border-radius:50%;background:#22C55E;display:none;align-items:center;justify-content:center;}
-#mg-tf-card .tf-opt.active .tf-chk{display:flex;}
-#mg-tf-card .tf-chk::after{content:'';width:5px;height:3px;
-  border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;
-  transform:rotate(-45deg) translate(1px,-1px);}
 </style></head><body class="__className_f367f3 bg-[#0C0C0E] text-white min-h-screen"><div class="min-h-screen bg-[#0C0C0E] p-4"><div class="space-y-12"><div class="max-w-4xl mx-auto space-y-8"><div class="text-center space-y-4 pt-8"><div class="flex items-center justify-center gap-3 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign h-8 w-8 text-[#22C55E]"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><h1 class="text-4xl font-bold bg-gradient-to-r from-[#22C55E] to-[#16A34A] bg-clip-text text-transparent">MR. GREEN</h1>
 </div><p class="text-xl text-gray-300 max-w-2xl mx-auto">Análise técnica profissional de gráficos com motor institucional avançado. Envie um print do seu gráfico e receba relatórios técnicos de nível Wall Street.</p></div><div class="grid md:grid-cols-3 gap-6"><div class="rounded-xl border text-card-foreground shadow bg-[#141417] border-[#242428]"><div class="flex flex-col space-y-1.5 p-6 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column h-8 w-8 text-[#22C55E] mx-auto mb-2"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg><div class="font-semibold leading-none tracking-tight text-white">Análise Institucional</div></div><div class="p-6 pt-0"><p class="text-gray-400 text-center">5 fases de análise com indicadores técnicos: Bollinger, MACD, RSI, EMA/SMA e OBV</p></div></div><div class="rounded-xl border text-card-foreground shadow bg-[#141417] border-[#242428]"><div class="flex flex-col space-y-1.5 p-6 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up h-8 w-8 text-[#22C55E] mx-auto mb-2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg><div class="font-semibold leading-none tracking-tight text-white">Relatórios Profissionais</div></div><div class="p-6 pt-0"><p class="text-gray-400 text-center">Sinais COMPRA/VENDA com confiabilidade dinâmica e análise de padrões de mercado</p></div></div><div class="rounded-xl border text-card-foreground shadow bg-[#141417] border-[#242428]"><div class="flex flex-col space-y-1.5 p-6 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign h-8 w-8 text-[#22C55E] mx-auto mb-2"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><div class="font-semibold leading-none tracking-tight text-white">Motor Institucional</div></div><div class="p-6 pt-0"><p class="text-gray-400 text-center">Processamento de nível profissional sem dependências externas, variações dinâmicas</p></div></div></div><div class="rounded-xl border text-card-foreground shadow bg-[#141417] border-[#242428] border-l-4 border-l-yellow-500"><div class="flex flex-col space-y-1.5 p-6"><div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert h-5 w-5 text-yellow-500"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg><div class="font-semibold tracking-tight text-yellow-500 text-lg">Aviso Importante</div></div></div><div class="p-6 pt-0"><div class="space-y-2"><p class="text-gray-300"><strong>Conteúdo educacional:</strong> Este sistema fornece análises técnicas simuladas para fins educacionais.</p><p class="text-gray-300"><strong>Você decide e executa:</strong> Todas as decisões de trading são de sua responsabilidade.</p><p class="text-gray-300"><strong>Sem garantias:</strong> Não há garantias de resultado. Trading envolve riscos significativos.</p></div></div></div></div><div class="max-w-2xl mx-auto space-y-6"><div class="rounded-xl border text-card-foreground shadow bg-[#141417] border-[#242428]"><div class="flex flex-col space-y-1.5 p-6"><div class="font-semibold leading-none tracking-tight text-white flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload h-5 w-5 text-[#22C55E]"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>Selecionar Gráfico para Análise</div><div class="text-sm text-gray-400">Formatos: PNG/JPG • Máx: 2 MB • Mín: 900×600</div></div><div class="p-6 pt-0"><div class="border-2 border-dashed rounded-lg p-8 text-center transition-colors border-[#242428] hover:border-[#22C55E]/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image h-12 w-12 text-gray-400 mx-auto mb-4"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg><p class="text-gray-300 mb-4">Arraste seu gráfico aqui ou clique para selecionar</p><p class="text-sm text-gray-500 mb-4">Dica: mantenha candles, eixos e barra superior visíveis</p><input type="file" accept="image/png,image/jpeg,image/jpg" class="hidden" id="file-input"><label for="file-input"><span class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border bg-background shadow-sm h-9 px-4 py-2 border-[#22C55E] text-[#22C55E] hover:bg-[#22C55E] hover:text-white cursor-pointer">Selecionar Arquivo</span></label></div></div></div></div></div></div><script src="js/webpack-80b1d124ec145803.js" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[9776,[\"177\",\"static/chunks/app/layout-7d226019e797eb97.js\"],\"TradingProvider\"]\n3:I[464,[],\"\"]\n4:I[6950,[],\"\"]\n5:I[8077,[],\"ClientPageRoot\"]\n6:I[1736,[\"880\",\"static/chunks/880-d6ae298848f42cad.js\",\"974\",\"static/chunks/app/page-824e9864b055145c.js\"],\"default\"]\n9:I[4880,[],\"OutletBoundary\"]\nc:I[4880,[],\"ViewportBoundary\"]\ne:I[4880,[],\"MetadataBoundary\"]\n10:I[6751,[],\"\"]\n:HL[\"/_next/static/media/e4af272ccee01ff0-s.p.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/css/65cd5c3497cc4293.css\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"b\":\"NqFIeP98DGKY_4hyhKaQl\",\"p\":\"\",\"c\":[\"\",\"\"],\"i\":false,\"f\":[[[\"\",{\"children\":[\"__PAGE__\",{}]},\"$undefined\",\"$undefined\",true],[\"\",[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/css/65cd5c3497cc4293.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"pt-BR\",\"className\":\"dark\",\"children\":[\"$\",\"body\",null,{\"className\":\"__className_f367f3 bg-[#0C0C0E] text-white min-h-screen\",\"children\":[\"$\",\"$L2\",null,{\"children\":[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]}]]}],{\"children\":[\"__PAGE__\",[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L5\",null,{\"Component\":\"$6\",\"searchParams\":{},\"params\":{},\"promises\":[\"$@7\",\"$@8\"]}],\"$undefined\",null,[\"$\",\"$L9\",null,{\"children\":[\"$La\",\"$Lb\",null]}]]}],{},null,false]},null,false],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$1\",\"yP7g3p8PGlZmrMx6IpybJ\",{\"children\":[[\"$\",\"$Lc\",null,{\"children\":\"$Ld\"}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}],[\"$\",\"$Le\",null,{\"children\":\"$Lf\"}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$10\",\"$undefined\"],\"s\":false,\"S\":true}\n"])</script><script>self.__next_f.push([1,"7:{}\n8:{}\n"])</script><script>self.__next_f.push([1,"d:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\na:null\n"])</script><script>self.__next_f.push([1,"b:null\nf:[[\"$\",\"title\",\"0\",{\"children\":\"IA de Trading por Print\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Análise inteligente de gráficos de trading com IA\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico\",\"type\":\"image/x-icon\",\"sizes\":\"16x16\"}]]\n"])</script></body></html>
