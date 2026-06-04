@@ -177,6 +177,35 @@
   setTimeout(injectBrokerBtn, 500);
   setTimeout(injectBrokerBtn, 1500);
 
+
+  // Inject timeframe selector
+  window.MG_TIMEFRAME = localStorage.getItem('mg_tf') || '1MIN';
+  function injectTFSelector() {
+    if (document.getElementById('mg-tf-wrap')) return;
+    var broker = document.getElementById('mg-broker-wrap');
+    if (!broker) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'mg-tf-wrap';
+    wrap.innerHTML =
+      '<div class="mg-tf-label"><strong>Tempo de expira\u00e7\u00e3o:</strong></div>' +
+      '<div class="mg-tf-opts">' +
+      '<button class="mg-tf-btn ' + (window.MG_TIMEFRAME==='1MIN'?'active':'') + '" onclick="MgSetTF(\'1MIN\')">1 MIN</button>' +
+      '<button class="mg-tf-btn ' + (window.MG_TIMEFRAME==='5MIN'?'active':'') + '" onclick="MgSetTF(\'5MIN\')">5 MIN</button>' +
+      '</div>';
+    broker.parentNode.insertBefore(wrap, broker.nextSibling);
+  }
+  window.MgSetTF = function(val) {
+    window.MG_TIMEFRAME = val;
+    localStorage.setItem('mg_tf', val);
+    document.querySelectorAll('.mg-tf-btn').forEach(function(b){
+      b.className = 'mg-tf-btn' + (b.textContent.trim() === val.replace('MIN',' MIN') ? ' active' : '');
+    });
+  };
+  if (document.readyState === 'complete') injectTFSelector();
+  else window.addEventListener('load', injectTFSelector);
+  setTimeout(injectTFSelector, 600);
+  setTimeout(injectTFSelector, 1600);
+
   window.MgOpen = function() {
     var m = document.getElementById('mg-modal');
     if (m) { m.className = 'open'; setTimeout(function(){ var e = document.getElementById('mg-em'); if(e) e.focus(); }, 80); }
