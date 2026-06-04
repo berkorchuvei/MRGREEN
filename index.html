@@ -178,30 +178,53 @@
   setTimeout(injectBrokerBtn, 1500);
 
 
-  // Inject timeframe selector
+  // ── Timeframe Selector ──────────────────────────────────
   window.MG_TIMEFRAME = localStorage.getItem('mg_tf') || '1MIN';
-  function injectTFSelector() {
-    if (document.getElementById('mg-tf-wrap')) return;
-    var broker = document.getElementById('mg-broker-wrap');
-    if (!broker) return;
-    var wrap = document.createElement('div');
-    wrap.id = 'mg-tf-wrap';
-    wrap.innerHTML =
-      '<div class="mg-tf-label"><strong>Tempo de expira\u00e7\u00e3o:</strong></div>' +
-      '<div class="mg-tf-opts">' +
-      '<button class="mg-tf-btn ' + (window.MG_TIMEFRAME==='1MIN'?'active':'') + '" onclick="MgSetTF(\'1MIN\')">1 MIN</button>' +
-      '<button class="mg-tf-btn ' + (window.MG_TIMEFRAME==='5MIN'?'active':'') + '" onclick="MgSetTF(\'5MIN\')">5 MIN</button>' +
+
+  function buildTFCard() {
+    var tf = window.MG_TIMEFRAME;
+    var card = document.createElement('div');
+    card.id = 'mg-tf-card';
+    card.innerHTML =
+      '<div class="tf-hdr">' +
+        '<div class="tf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>' +
+        '<div><div class="tf-ttl">Escolha o Timeframe</div><div class="tf-sub">Tempo de expiração dos sinais gerados</div></div>' +
+      '</div>' +
+      '<div class="tf-opts">' +
+        '<div class="tf-opt'+(tf==='1MIN'?' active':'')+'" onclick="MgSetTF('1MIN')">' +
+          '<div class="tf-chk"></div><div class="tf-val">1 MIN</div><div class="tf-dsc">Operações rápidas</div>' +
+        '</div>' +
+        '<div class="tf-opt'+(tf==='5MIN'?' active':'')+'" onclick="MgSetTF('5MIN')">' +
+          '<div class="tf-chk"></div><div class="tf-val">5 MIN</div><div class="tf-dsc">Operações moderadas</div>' +
+        '</div>' +
       '</div>';
-    broker.parentNode.insertBefore(wrap, broker.nextSibling);
+    return card;
   }
+
+  function injectTFSelector() {
+    if (document.getElementById('mg-tf-card')) return;
+    var cards = document.querySelectorAll('.rounded-xl.border');
+    var warningCard = null;
+    cards.forEach(function(c) {
+      if (c.textContent.indexOf('Sem garantias') > -1) warningCard = c;
+    });
+    if (!warningCard) return;
+    warningCard.parentNode.insertBefore(buildTFCard(), warningCard.nextSibling);
+  }
+
   window.MgSetTF = function(val) {
     window.MG_TIMEFRAME = val;
     localStorage.setItem('mg_tf', val);
-    document.querySelectorAll('.mg-tf-btn').forEach(function(b){
-      b.className = 'mg-tf-btn' + (b.textContent.trim() === val.replace('MIN',' MIN') ? ' active' : '');
+    document.querySelectorAll('.tf-opt').forEach(function(opt) {
+      var v = opt.querySelector('.tf-val');
+      if (!v) return;
+      var isActive = (val==='1MIN' && v.textContent.trim()==='1 MIN') ||
+                     (val==='5MIN' && v.textContent.trim()==='5 MIN');
+      opt.className = 'tf-opt' + (isActive ? ' active' : '');
     });
   };
-  if (document.readyState === 'complete') injectTFSelector();
+
+  if (document.readyState==='complete') injectTFSelector();
   else window.addEventListener('load', injectTFSelector);
   setTimeout(injectTFSelector, 600);
   setTimeout(injectTFSelector, 1600);
