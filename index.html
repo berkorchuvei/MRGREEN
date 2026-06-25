@@ -1,854 +1,1008 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MR. GREEN — Análise técnica de nível institucional</title>
-<meta name="description" content="Plataforma profissional de análise técnica para traders de opções binárias. Trial 24h grátis.">
-<link rel="icon" href="images/favicon.ico">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MR. GREEN — Trading Terminal</title>
+<link rel="icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#04090e;--bg2:#06101a;--surface:#091522;--card:#0d1c2f;--card2:#111f32;
-  --border:#1a2f48;--border2:#233d5e;
-  --green:#22c55e;--green2:#16a34a;--green3:#0d7030;
-  --gg:rgba(34,197,94,.12);--gg2:rgba(34,197,94,.22);
-  --gold:#f59e0b;--goldg:rgba(245,158,11,.12);
-  --red:#ef4444;--text:#ddeeff;--text2:#6a8faa;--text3:#344f65;
-  --r:12px;--r2:16px;--r3:20px;
+  --g:#22C55E;--gd:#16A34A;
+  --bg:#0a0a0d;--surf:#111114;--surf2:#18181c;
+  --brd:#1f1f24;--brd2:#2a2a30;
+  --txt:#F0F0F2;--mut:#5a5a6a;--mut2:#8a8a9a;
+  --red:#EF4444;--gold:#F59E0B;
+  --font:'Space Grotesk',sans-serif;--mono:'Space Mono',monospace;
 }
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html,body{background:var(--bg);color:var(--txt);font-family:var(--font);min-height:100vh;overflow-x:hidden}
 
-/* ── NAV ─────────────────────────────────── */
-#nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(--border);
-  background:rgba(4,9,14,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;
-  display:flex;align-items:center;gap:2rem}
-.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:.06em;
-  color:var(--text);text-decoration:none;display:flex;align-items:center;gap:.4rem;white-space:nowrap;flex-shrink:0}
-.nav-logo em{color:var(--green);font-style:normal}
-.nav-links{display:flex;gap:1.75rem;flex:1;margin-left:.5rem}
-.nav-links a{color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s}
-.nav-links a:hover{color:var(--text)}
-.nav-ctas{display:flex;align-items:center;gap:.65rem;margin-left:auto;flex-shrink:0}
-.btn-ghost{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:8px;
-  padding:.45rem .9rem;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center}
-.btn-ghost:hover{border-color:var(--green);color:var(--green)}
-.btn-green{background:var(--green);color:#fff;border:none;border-radius:8px;
-  padding:.5rem 1rem;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
-.btn-green:hover{background:var(--green2);box-shadow:0 0 20px var(--gg2)}
-.btn-green-lg{padding:.75rem 1.6rem;font-size:1rem;border-radius:10px}
-.btn-outline-lg{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.4rem;
-  font-size:.95rem;font-weight:600;border:1px solid var(--border2);border-radius:10px;
-  color:var(--text2);text-decoration:none;transition:all .2s;background:none;cursor:pointer}
-.btn-outline-lg:hover{border-color:var(--green);color:var(--text)}
-.btn-ghost-lg{display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.2rem;
-  font-size:.9rem;color:var(--text2);text-decoration:none;transition:color .2s;cursor:pointer;background:none;border:none}
-.btn-ghost-lg:hover{color:var(--text)}
-#nav-user-info{display:flex;align-items:center;gap:.65rem}
-.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--green3);
-  border:2px solid var(--green);display:flex;align-items:center;justify-content:center;
-  font-size:.75rem;font-weight:700;color:#fff;font-family:'DM Mono',monospace;flex-shrink:0}
-.nav-plan-badge{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:6px;
-  font-family:'DM Mono',monospace;letter-spacing:.03em}
-.badge-trial{background:var(--goldg);border:1px solid rgba(245,158,11,.3);color:var(--gold)}
-.badge-monthly{background:var(--gg);border:1px solid rgba(34,197,94,.3);color:var(--green)}
-.badge-lifetime{background:var(--gg);border:1px solid rgba(34,197,94,.5);color:var(--green)}
-
-/* ── TICKER ──────────────────────────────── */
-.ticker-wrap{background:var(--bg2);border-bottom:1px solid var(--border);height:36px;
-  overflow:hidden;display:flex;align-items:center;margin-top:60px}
-.ticker-track{display:flex;gap:0;animation:tickerScroll 60s linear infinite;width:max-content}
-.ticker-item{display:flex;align-items:center;gap:.45rem;padding:0 2rem;
-  font-size:.75rem;font-family:'DM Mono',monospace;white-space:nowrap;border-right:1px solid var(--border)}
-.ticker-pair{color:var(--text2);font-weight:500}
-.ticker-price{color:var(--text);font-weight:500}
-.ticker-chg.up{color:var(--green)}
-.ticker-chg.down{color:var(--red)}
-@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* ── SECTIONS BASE ───────────────────────── */
-.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
-.section{padding:90px 0}
-.section-tag{font-size:.75rem;font-family:'DM Mono',monospace;color:var(--green);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;opacity:.85}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);
-  letter-spacing:.03em;line-height:1.1;margin-bottom:1rem}
-.section-sub{color:var(--text2);font-size:.95rem;max-width:560px;line-height:1.7}
-.section-header{margin-bottom:3rem}
-
-/* ── HERO ────────────────────────────────── */
-#view-landing .hero{padding:80px 0 90px;
-  background:radial-gradient(ellipse 900px 600px at 60% 40%,rgba(34,197,94,.05) 0%,transparent 70%)}
-.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;
-  background:var(--gg);border:1px solid rgba(34,197,94,.25);border-radius:8px;
-  padding:.35rem .85rem;font-size:.78rem;font-weight:600;color:var(--green);
-  font-family:'DM Mono',monospace;margin-bottom:1.5rem;letter-spacing:.04em}
-.hero-badge::before{content:'●';animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,5.5vw,4.2rem);
-  letter-spacing:.04em;line-height:1.05;margin-bottom:1.25rem}
-.hero h1 em{color:var(--green);font-style:normal;
-  text-shadow:0 0 40px rgba(34,197,94,.35)}
-.hero p{color:var(--text2);font-size:1rem;line-height:1.75;margin-bottom:2rem;max-width:480px}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:.75rem}
-.hero-note{font-size:.75rem;color:var(--text3);font-family:'DM Mono',monospace}
-
-/* ── SIGNAL MOCK CARD ───────────────────── */
-.signal-mock{background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);
-  overflow:hidden;box-shadow:0 0 60px rgba(34,197,94,.1),0 20px 60px rgba(0,0,0,.4)}
-.sm-header{background:var(--bg2);padding:.65rem 1rem;display:flex;align-items:center;
-  justify-content:space-between;border-bottom:1px solid var(--border)}
-.sm-path{font-size:.72rem;font-family:'DM Mono',monospace;color:var(--text3)}
-.sm-live{font-size:.7rem;font-family:'DM Mono',monospace;color:var(--green);
-  display:flex;align-items:center;gap:.35rem;font-weight:600}
-.sm-live::before{content:'●';animation:pulse 2s ease-in-out infinite}
-.sm-body{padding:1.25rem}
-.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1rem}
-.sm-stat{}
-.sm-stat .lbl{font-size:.68rem;color:var(--text2);font-family:'DM Mono',monospace;
-  text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
-.sm-stat .val{font-size:.95rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--text)}
-.sm-stat .val.call{color:var(--green)}
-.sm-stat .val.pct{color:var(--green)}
-.sm-bar{background:var(--border);border-radius:4px;height:4px;margin-top:.35rem;overflow:hidden}
-.sm-bar-fill{height:100%;background:linear-gradient(90deg,var(--green2),var(--green));border-radius:4px}
-.sm-indicators{display:flex;flex-wrap:wrap;gap:.4rem;padding-top:.85rem;border-top:1px solid var(--border)}
-.sm-ind{font-size:.7rem;font-family:'DM Mono',monospace;color:var(--text2);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.2rem .5rem}
-
-/* ── FEATURES ────────────────────────────── */
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);
-  padding:1.5rem;transition:border-color .25s,box-shadow .25s}
-.feat-card:hover{border-color:var(--border2);box-shadow:0 0 30px rgba(34,197,94,.06)}
-.feat-icon{font-size:1.5rem;margin-bottom:.85rem}
-.feat-title{font-size:.95rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
-.feat-desc{font-size:.82rem;color:var(--text2);line-height:1.6}
-
-/* ── STEPS ───────────────────────────────── */
-.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
-.step-card{position:relative;text-align:center;padding:1.5rem 1rem}
-.step-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--green3);
-  letter-spacing:.05em;line-height:1;margin-bottom:.5rem;opacity:.7}
-.step-title{font-size:.95rem;font-weight:700;margin-bottom:.4rem}
-.step-desc{font-size:.82rem;color:var(--text2);line-height:1.6}
-
-/* ── PLANS ───────────────────────────────── */
-.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:840px;margin:0 auto}
-.plan-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);
-  padding:2rem;position:relative;transition:border-color .25s}
-.plan-card.featured{border-color:var(--green);box-shadow:0 0 40px rgba(34,197,94,.1)}
-.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
-  background:var(--green);color:#fff;border-radius:6px;padding:.2rem .75rem;
-  font-size:.72rem;font-weight:700;letter-spacing:.04em;white-space:nowrap}
-.plan-period{font-size:.75rem;font-family:'DM Mono',monospace;color:var(--text2);
-  text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem;font-weight:600}
-.plan-price{margin-bottom:.35rem;display:flex;align-items:baseline;gap:.25rem}
-.plan-price .cur{font-size:1rem;color:var(--text2);margin-top:.15rem}
-.plan-price .amt{font-family:'DM Mono',monospace;font-size:2.6rem;font-weight:700;color:var(--text);line-height:1}
-.plan-recur{font-size:.78rem;color:var(--text2);margin-bottom:1.25rem;font-family:'DM Mono',monospace}
-.plan-feats{list-style:none;margin-bottom:1.5rem}
-.plan-feats li{font-size:.84rem;color:var(--text2);padding:.3rem 0;display:flex;
-  align-items:flex-start;gap:.5rem}
-.plan-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:.05rem}
-.btn-plan-m{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);
-  border-radius:10px;padding:.85rem;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s}
-.btn-plan-m:hover{border-color:var(--green);color:var(--green)}
-.btn-plan-g{width:100%;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;
-  border:none;border-radius:10px;padding:.85rem;font-weight:700;font-size:.9rem;
-  cursor:pointer;transition:all .2s;box-shadow:0 0 20px var(--gg)}
-.btn-plan-g:hover{box-shadow:0 0 35px var(--gg2);transform:translateY(-1px)}
-.plans-note{text-align:center;margin-top:1.25rem;font-size:.78rem;color:var(--text3);
-  font-family:'DM Mono',monospace}
-
-/* ── WARNING ─────────────────────────────── */
-.warning-box{max-width:840px;margin:0 auto;background:rgba(245,158,11,.06);
-  border:1px solid rgba(245,158,11,.2);border-left:3px solid var(--gold);
-  border-radius:var(--r);padding:1.25rem 1.5rem}
-.warning-box p{font-size:.84rem;color:var(--text2);line-height:1.65}
-.warning-box strong{color:var(--text)}
-
-/* ── FOOTER ──────────────────────────────── */
-footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:4rem}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.06em;color:var(--text2)}
-.footer-links{display:flex;gap:1.5rem}
-.footer-links a{font-size:.8rem;color:var(--text3);text-decoration:none;transition:color .2s}
-.footer-links a:hover{color:var(--text2)}
-.footer-note{font-size:.75rem;color:var(--text3)}
-
-/* ── AUTH MODAL ──────────────────────────── */
-.modal-overlay{position:fixed;inset:0;background:rgba(4,9,14,.92);z-index:1000;
-  display:flex;align-items:center;justify-content:center;padding:1rem;
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.modal-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r3);
-  padding:2.25rem;width:100%;max-width:420px;position:relative;
-  box-shadow:0 0 60px rgba(0,0,0,.6),0 0 100px rgba(34,197,94,.05)}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;
-  color:var(--text2);cursor:pointer;font-size:1.3rem;line-height:1;padding:.25rem;
-  transition:color .2s}
-.modal-close:hover{color:var(--text)}
-.modal-logo{text-align:center;margin-bottom:1.75rem}
-.modal-logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--green),var(--green2));
-  border-radius:14px;display:flex;align-items:center;justify-content:center;
-  font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#fff;margin:0 auto .65rem;
-  box-shadow:0 0 30px rgba(34,197,94,.3)}
-.modal-logo h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em}
-.modal-logo p{font-size:.8rem;color:var(--text2);margin-top:.2rem}
-.tabs{display:flex;gap:4px;background:var(--surface);border-radius:10px;padding:4px;margin-bottom:1.5rem}
-.tab{flex:1;text-align:center;padding:.55rem;border-radius:7px;cursor:pointer;
-  font-size:.85rem;color:var(--text2);transition:all .2s;font-weight:500}
-.tab.active{background:var(--green);color:#fff;font-weight:700}
-.field{margin-bottom:1rem}
-.field label{display:block;font-size:.72rem;color:var(--text2);text-transform:uppercase;
-  letter-spacing:.06em;font-weight:700;margin-bottom:.4rem}
-.field input{width:100%;background:var(--surface);border:1px solid var(--border);
-  border-radius:10px;padding:.75rem 1rem;color:var(--text);font-size:.95rem;
-  outline:none;transition:border-color .2s;font-family:'DM Sans',sans-serif}
-.field input:focus{border-color:var(--green)}
-.field input::placeholder{color:var(--text3)}
-.btn-submit{width:100%;background:linear-gradient(135deg,var(--green),var(--green2));
-  color:#fff;border:none;border-radius:10px;padding:.9rem;font-size:1rem;font-weight:700;
-  cursor:pointer;transition:all .2s;margin-top:.25rem;font-family:'DM Sans',sans-serif;
-  box-shadow:0 0 20px rgba(34,197,94,.25)}
-.btn-submit:hover:not(:disabled){box-shadow:0 0 35px rgba(34,197,94,.4);transform:translateY(-1px)}
-.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.auth-msg{text-align:center;font-size:.82rem;margin-top:.85rem;min-height:1.1rem}
-.auth-msg.ok{color:var(--green)}
-.auth-msg.err{color:var(--red)}
-.trial-note{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);
-  border-radius:8px;padding:.65rem 1rem;font-size:.78rem;color:#34d399;text-align:center;margin-bottom:1.25rem}
-
-/* ── DASHBOARD VIEW ──────────────────────── */
-#view-dashboard{padding:56px 0 0;min-height:100vh;
-  background:radial-gradient(ellipse 800px 500px at 50% 20%,rgba(34,197,94,.04) 0%,transparent 70%)}
-.dash-wrap{max-width:700px;margin:0 auto;padding:3rem 24px 2rem}
-.dash-greeting{font-size:.85rem;color:var(--text2);margin-bottom:.3rem;font-family:'DM Mono',monospace}
-.dash-name{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:.04em;margin-bottom:1.75rem}
-.dash-status{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);
-  padding:1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.dash-status-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
-.dash-status-icon.trial{background:var(--goldg);border:1px solid rgba(245,158,11,.25)}
-.dash-status-icon.paid{background:var(--gg);border:1px solid rgba(34,197,94,.25)}
-.dash-status-text{flex:1}
-.dash-status-text h3{font-size:1rem;font-weight:700;margin-bottom:.2rem}
-.dash-status-text p{font-size:.82rem;color:var(--text2)}
-.dash-timer{font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;
-  color:var(--gold);background:var(--goldg);border:1px solid rgba(245,158,11,.2);
-  border-radius:8px;padding:.4rem .9rem}
-.dash-cta{display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;
-  border:none;border-radius:12px;padding:1.1rem 2rem;font-size:1.05rem;font-weight:700;
-  cursor:pointer;width:100%;margin-bottom:1rem;gap:.6rem;transition:all .25s;
-  text-decoration:none;font-family:'DM Sans',sans-serif;
-  box-shadow:0 0 30px rgba(34,197,94,.25),0 4px 16px rgba(0,0,0,.3)}
-.dash-cta:hover{box-shadow:0 0 50px rgba(34,197,94,.35),0 6px 24px rgba(0,0,0,.4);transform:translateY(-2px)}
-.dash-secondary-btns{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem}
-.dash-sec-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;
-  background:var(--card);border:1px solid var(--border);border-radius:10px;
-  padding:.8rem;font-size:.85rem;font-weight:600;color:var(--text2);cursor:pointer;
-  transition:all .2s;text-decoration:none}
-.dash-sec-btn:hover{border-color:var(--green);color:var(--green)}
-.dash-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:2rem}
-.dash-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
-  padding:1rem;text-align:center}
-.dash-stat .val{font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;
-  color:var(--green);display:block;margin-bottom:.2rem}
-.dash-stat .lbl{font-size:.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
-
-/* ── RESPONSIVE ─────────────────────────── */
-@media(max-width:900px){
-  .hero-inner{grid-template-columns:1fr;gap:2.5rem}
-  .features-grid{grid-template-columns:1fr 1fr}
-  .steps-grid{grid-template-columns:1fr 1fr;gap:1rem}
-  .plans-grid{grid-template-columns:1fr}
-  .plan-card.featured{margin-top:1rem}
+/* Scanline overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);
 }
-@media(max-width:600px){
-  .nav-links{display:none}
-  .features-grid{grid-template-columns:1fr}
-  .steps-grid{grid-template-columns:1fr}
-  .hero-ctas{flex-direction:column}
-  .btn-green-lg,.btn-outline-lg,.btn-ghost-lg{width:100%;justify-content:center}
-  .dash-secondary-btns{grid-template-columns:1fr}
-  .dash-stats-grid{grid-template-columns:1fr 1fr}
-  .footer-inner{flex-direction:column;text-align:center}
-  .footer-links{justify-content:center}
+/* Grid */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(34,197,94,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.025) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* Top glow */
+.top-glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+  width:800px;height:500px;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse,rgba(34,197,94,.08) 0%,transparent 65%);}
+
+/* ── TRIAL BAR ─────────────────────────────────────── */
+#mrgreen-trial-bar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:rgba(10,10,13,.95);backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(34,197,94,.2);
+  padding:9px 20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  font-family:var(--font);
+}
+#mrgreen-trial-bar .tbar-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+#mrgreen-trial-bar .tbar-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);flex-shrink:0;
+  box-shadow:0 0 8px var(--g);animation:pulse 1.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+#mrgreen-trial-bar .tbar-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g);font-family:var(--mono);background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.2);padding:2px 8px;border-radius:3px;}
+#mrgreen-trial-bar .tbar-text{color:var(--mut2);font-size:.82rem;}
+#mrgreen-trial-bar .tbar-text strong{color:var(--txt);}
+#mrgreen-trial-bar .tbar-countdown{
+  font-family:var(--mono);font-weight:700;color:var(--g);
+  font-size:.88rem;background:rgba(34,197,94,.06);
+  padding:2px 10px;border-radius:3px;border:1px solid rgba(34,197,94,.15);}
+#mrgreen-trial-bar .tbar-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+#mrgreen-trial-bar .tbar-login{
+  background:transparent;border:1px solid var(--brd2);color:var(--mut2);
+  border-radius:6px;padding:6px 14px;font-size:.75rem;cursor:pointer;
+  font-family:var(--font);transition:all .2s;}
+#mrgreen-trial-bar .tbar-login:hover{border-color:rgba(34,197,94,.4);color:var(--g);}
+#mrgreen-trial-bar .tbar-btn{
+  background:linear-gradient(135deg,var(--g),var(--gd));color:#fff;
+  border:none;border-radius:6px;padding:6px 16px;
+  font-weight:700;font-size:.78rem;cursor:pointer;
+  font-family:var(--font);box-shadow:0 0 16px rgba(34,197,94,.2);transition:opacity .2s;}
+#mrgreen-trial-bar .tbar-btn:hover{opacity:.85;}
+
+/* ── MODAL ──────────────────────────────────────────── */
+#mg-modal{
+  position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.88);
+  display:none;align-items:center;justify-content:center;padding:16px;
+  font-family:var(--font);backdrop-filter:blur(6px);}
+#mg-modal.open{display:flex;}
+#mg-modal .mbox{
+  background:var(--surf);border:1px solid rgba(34,197,94,.2);border-radius:12px;
+  padding:32px 28px;max-width:380px;width:100%;position:relative;
+  box-shadow:0 0 60px rgba(34,197,94,.06);}
+#mg-modal .mcls{position:absolute;top:14px;right:16px;background:none;border:none;
+  color:var(--mut);font-size:1.1rem;cursor:pointer;transition:color .2s;}
+#mg-modal .mcls:hover{color:var(--mut2);}
+#mg-modal .mtag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--g);font-family:var(--mono);margin-bottom:10px;display:block;}
+#mg-modal h3{font-weight:700;font-size:1.1rem;color:var(--txt);margin-bottom:4px;}
+#mg-modal .msub{font-size:.82rem;color:var(--mut2);margin-bottom:20px;}
+#mg-modal input{
+  width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:7px;
+  padding:11px 13px;color:var(--txt);font-size:.9rem;font-family:var(--font);
+  outline:none;box-sizing:border-box;margin-bottom:10px;transition:border-color .2s;}
+#mg-modal input:focus{border-color:var(--g);}
+#mg-modal .mmsg{font-size:.78rem;min-height:16px;margin-bottom:10px;}
+#mg-modal .msbtn{
+  width:100%;background:linear-gradient(135deg,var(--g),var(--gd));color:#fff;
+  border:none;border-radius:7px;padding:12px;font-weight:700;font-size:.9rem;
+  cursor:pointer;font-family:var(--font);box-shadow:0 4px 20px rgba(34,197,94,.2);}
+#mg-modal .msbtn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ── LAYOUT ─────────────────────────────────────────── */
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+
+/* NAV */
+nav{
+  border-bottom:1px solid var(--brd);
+  padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(10,10,13,.8);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:100;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--g);
+  box-shadow:0 0 8px var(--g);}
+.nav-logo-text{font-family:var(--mono);font-weight:700;font-size:1rem;letter-spacing:.04em;}
+.nav-logo-sub{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);margin-top:1px;}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.nav-broker-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);
+  color:var(--g);border-radius:6px;padding:7px 14px;
+  font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;
+  transition:all .2s;font-family:var(--font);}
+.nav-broker-btn:hover{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4);}
+.nav-broker-btn svg{width:14px;height:14px;}
+.nav-logout{background:transparent;border:1px solid var(--brd);color:var(--mut);
+  border-radius:6px;padding:7px 12px;font-size:.75rem;cursor:pointer;
+  font-family:var(--font);transition:all .2s;}
+.nav-logout:hover{color:var(--txt);border-color:var(--brd2);}
+
+/* MAIN CONTENT */
+main{flex:1;padding:32px 24px 60px;max-width:1100px;width:100%;margin:0 auto;}
+
+/* HERO */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:40px 0 48px;border-bottom:1px solid var(--brd);margin-bottom:36px;}
+.hero-tag{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--g);font-family:var(--mono);
+  background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);
+  padding:4px 14px;border-radius:3px;margin-bottom:20px;display:inline-block;}
+.hero h1{
+  font-family:var(--mono);font-size:clamp(2.8rem,8vw,5.5rem);font-weight:700;
+  letter-spacing:-.01em;line-height:.95;
+  background:linear-gradient(160deg,#5aff90 0%,#22C55E 45%,#14803C 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 24px rgba(34,197,94,.18));margin-bottom:16px;}
+.hero-subtitle{color:var(--mut2);font-size:1rem;max-width:520px;line-height:1.7;margin-bottom:28px;}
+.hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat .val{font-family:var(--mono);font-size:1.6rem;font-weight:700;color:var(--g);}
+.hero-stat .lbl{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-top:2px;}
+
+/* FEATURE CARDS */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;}
+.feat-card{
+  background:var(--surf);border:1px solid var(--brd);border-radius:10px;
+  padding:20px;transition:all .25s;}
+.feat-card:hover{border-color:rgba(34,197,94,.2);transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.feat-icon{width:32px;height:32px;background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.15);border-radius:7px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.feat-icon svg{width:16px;height:16px;color:var(--g);}
+.feat-title{font-size:.85rem;font-weight:600;color:var(--txt);margin-bottom:5px;}
+.feat-desc{font-size:.78rem;color:var(--mut2);line-height:1.6;}
+
+/* DISCLAIMER */
+.disclaimer{
+  background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);
+  border-left:2px solid var(--gold);border-radius:8px;padding:14px 18px;
+  margin-bottom:36px;display:flex;align-items:flex-start;gap:12px;}
+.disclaimer svg{color:var(--gold);flex-shrink:0;width:16px;height:16px;margin-top:1px;}
+.disclaimer-text{font-size:.8rem;color:var(--mut2);line-height:1.7;}
+.disclaimer-text strong{color:var(--txt);}
+
+/* TERMINAL PANEL */
+.terminal{
+  background:var(--surf);border:1px solid var(--brd);border-radius:12px;
+  overflow:hidden;margin-bottom:20px;}
+.terminal-header{
+  background:var(--surf2);border-bottom:1px solid var(--brd);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.terminal-header-left{display:flex;align-items:center;gap:10px;}
+.term-dots{display:flex;gap:5px;}
+.term-dot{width:9px;height:9px;border-radius:50%;}
+.term-dot:nth-child(1){background:#FF5F57;}
+.term-dot:nth-child(2){background:#FEBC2E;}
+.term-dot:nth-child(3){background:#28C840;}
+.term-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);}
+.term-tf-badge{font-size:.68rem;letter-spacing:.1em;font-family:var(--mono);
+  color:var(--g);background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.15);padding:2px 8px;border-radius:3px;}
+.terminal-body{padding:20px;}
+
+/* TIMEFRAME SELECTOR */
+.tf-section{margin-bottom:20px;}
+.tf-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;}
+.tf-label::before,.tf-label::after{content:'';flex:1;height:1px;background:var(--brd);}
+.tf-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+.tf-btn{
+  padding:10px 0;border-radius:6px;font-size:.82rem;font-weight:600;cursor:pointer;
+  transition:all .2s;border:1px solid;background:transparent;
+  font-family:var(--mono);letter-spacing:.04em;}
+.tf-btn.active{
+  background:rgba(34,197,94,.1);border-color:var(--g);color:var(--g);
+  box-shadow:0 0 12px rgba(34,197,94,.12);}
+.tf-btn.inactive{border-color:var(--brd2);color:var(--mut);}
+.tf-btn.inactive:hover{border-color:var(--brd2);color:var(--mut2);}
+
+/* ASSET INPUT */
+.asset-section{margin-bottom:24px;}
+.asset-label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);margin-bottom:8px;display:block;}
+.asset-input-wrap{position:relative;}
+.asset-input{
+  width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:7px;
+  padding:11px 14px 11px 38px;color:var(--txt);font-size:.9rem;font-family:var(--font);
+  outline:none;transition:border-color .2s;}
+.asset-input:focus{border-color:rgba(34,197,94,.4);}
+.asset-input::placeholder{color:var(--mut);}
+.asset-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--mut);pointer-events:none;}
+.asset-icon svg{width:15px;height:15px;}
+
+/* UPLOAD ZONE */
+.upload-zone{
+  border:1px dashed var(--brd2);border-radius:8px;padding:40px;text-align:center;
+  cursor:pointer;transition:all .2s;position:relative;margin-bottom:20px;}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.02);}
+.upload-zone.has-file{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.03);}
+.upload-icon{margin:0 auto 14px;
+  width:44px;height:44px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.12);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.upload-icon svg{width:20px;height:20px;color:var(--g);}
+.upload-main{font-size:.92rem;color:var(--txt);font-weight:500;margin-bottom:4px;}
+.upload-sub{font-size:.75rem;color:var(--mut);margin-bottom:16px;}
+.upload-preview{display:none;max-width:100%;max-height:200px;border-radius:6px;
+  object-fit:contain;border:1px solid var(--brd);}
+.upload-file-info{font-size:.75rem;color:var(--g);font-family:var(--mono);
+  display:none;margin-top:8px;}
+.upload-btn-label{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid rgba(34,197,94,.3);color:var(--g);
+  border-radius:6px;padding:8px 18px;font-size:.8rem;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:var(--font);}
+.upload-btn-label:hover{background:rgba(34,197,94,.08);}
+
+/* ACTION BUTTONS */
+.action-row{display:flex;flex-direction:column;gap:10px;}
+.btn-analyze{
+  width:100%;padding:14px;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;
+  border:none;font-family:var(--font);letter-spacing:.01em;
+  background:linear-gradient(135deg,var(--g),var(--gd));color:#fff;
+  box-shadow:0 0 24px rgba(34,197,94,.2),0 4px 12px rgba(0,0,0,.3);
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+.btn-analyze:hover:not(:disabled){transform:translateY(-1px);
+  box-shadow:0 0 36px rgba(34,197,94,.3),0 6px 20px rgba(0,0,0,.4);}
+.btn-analyze:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-broker-main{
+  width:100%;padding:13px;border-radius:8px;font-size:.88rem;font-weight:600;
+  border:1px solid rgba(34,197,94,.25);color:var(--g);background:rgba(34,197,94,.05);
+  cursor:pointer;font-family:var(--font);text-decoration:none;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;letter-spacing:.01em;}
+.btn-broker-main:hover{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);}
+.btn-broker-main svg{width:16px;height:16px;}
+
+/* REPORT PANEL */
+.report-panel{
+  background:var(--surf);border:1px solid var(--brd);border-radius:12px;overflow:hidden;}
+.report-header{
+  background:var(--surf2);border-bottom:1px solid var(--brd);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.report-header-left{display:flex;align-items:center;gap:8px;}
+.report-status{display:flex;align-items:center;gap:6px;font-size:.72rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-family:var(--mono);}
+.report-status-dot{width:6px;height:6px;border-radius:50%;background:var(--mut);}
+.report-status-dot.live{background:var(--g);box-shadow:0 0 6px var(--g);
+  animation:pulse 1.5s ease-in-out infinite;}
+.report-body{padding:20px;min-height:180px;}
+.report-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:140px;gap:12px;}
+.report-empty-icon{
+  width:40px;height:40px;background:var(--surf2);border:1px solid var(--brd);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.report-empty-icon svg{width:18px;height:18px;color:var(--mut);}
+.report-empty-text{font-size:.82rem;color:var(--mut);text-align:center;line-height:1.6;}
+.loading-spinner{
+  width:24px;height:24px;border:2px solid rgba(34,197,94,.2);
+  border-top-color:var(--g);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-label{font-size:.8rem;color:var(--mut2);text-align:center;font-family:var(--mono);
+  margin-top:10px;}
+
+/* REPORT CONTENT */
+.report-content{display:none;}
+.report-signal-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 0;border-bottom:1px solid var(--brd);margin-bottom:16px;}
+.signal-badge{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;font-weight:700;
+  padding:4px 14px;border-radius:4px;text-transform:uppercase;}
+.signal-badge.compra{background:rgba(34,197,94,.12);color:var(--g);border:1px solid rgba(34,197,94,.25);}
+.signal-badge.venda{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.25);}
+.signal-badge.neutro{background:rgba(90,90,106,.12);color:var(--mut2);border:1px solid rgba(90,90,106,.25);}
+.signal-meta{display:flex;gap:16px;}
+.signal-meta-item{text-align:right;}
+.signal-meta-item .sm-label{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);}
+.signal-meta-item .sm-val{font-size:.85rem;font-weight:600;color:var(--txt);font-family:var(--mono);}
+.report-sections{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.report-section{background:var(--bg);border:1px solid var(--brd);border-radius:7px;padding:14px;}
+.report-section-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);margin-bottom:10px;}
+.report-text{font-size:.82rem;color:var(--mut2);line-height:1.7;}
+.report-text p{margin-bottom:6px;}
+
+/* HISTORY PANEL */
+.history-panel{
+  background:var(--surf);border:1px solid var(--brd);border-radius:12px;
+  overflow:hidden;margin-top:20px;}
+.history-header{
+  background:var(--surf2);border-bottom:1px solid var(--brd);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.history-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);display:flex;align-items:center;gap:8px;}
+.history-count{font-size:.65rem;background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.15);color:var(--g);padding:1px 7px;border-radius:3px;
+  font-family:var(--mono);}
+.history-clear{background:transparent;border:none;color:var(--mut);font-size:.72rem;
+  cursor:pointer;font-family:var(--mono);transition:color .2s;letter-spacing:.05em;}
+.history-clear:hover{color:var(--red);}
+.history-body{max-height:300px;overflow-y:auto;}
+.history-body::-webkit-scrollbar{width:3px;}
+.history-body::-webkit-scrollbar-track{background:transparent;}
+.history-body::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
+.history-empty{padding:28px;text-align:center;color:var(--mut);font-size:.8rem;font-family:var(--mono);}
+.history-item{
+  padding:12px 18px;border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .15s;}
+.history-item:hover{background:rgba(255,255,255,.02);}
+.history-item:last-child{border-bottom:none;}
+.hi-signal{font-size:.65rem;font-family:var(--mono);font-weight:700;letter-spacing:.1em;
+  padding:2px 8px;border-radius:3px;text-transform:uppercase;flex-shrink:0;}
+.hi-signal.compra{background:rgba(34,197,94,.1);color:var(--g);}
+.hi-signal.venda{background:rgba(239,68,68,.1);color:var(--red);}
+.hi-signal.neutro{background:rgba(90,90,106,.1);color:var(--mut2);}
+.hi-asset{font-size:.8rem;font-weight:600;color:var(--txt);font-family:var(--mono);}
+.hi-tf{font-size:.7rem;color:var(--mut);font-family:var(--mono);}
+.hi-time{font-size:.68rem;color:var(--mut);font-family:var(--mono);margin-left:auto;}
+
+/* LAYOUT GRID */
+.layout-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:20px;align-items:start;}
+
+/* SIDEBAR BLOCKS */
+.sidebar{display:flex;flex-direction:column;gap:16px;}
+.sidebar-block{background:var(--surf);border:1px solid var(--brd);border-radius:10px;overflow:hidden;}
+.sidebar-block-header{
+  background:var(--surf2);border-bottom:1px solid var(--brd);
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+.sidebar-block-title{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);font-family:var(--mono);display:flex;align-items:center;gap:6px;}
+.sidebar-block-title::before{content:'//';color:var(--g);opacity:.7;}
+.sidebar-block-body{padding:14px;}
+
+/* UPGRADE BLOCK */
+.upgrade-block{
+  background:linear-gradient(135deg,rgba(34,197,94,.06),rgba(22,163,74,.02));
+  border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:16px;}
+.upgrade-tag{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--g);font-family:var(--mono);margin-bottom:8px;}
+.upgrade-title{font-size:.95rem;font-weight:700;color:var(--txt);margin-bottom:4px;}
+.upgrade-desc{font-size:.78rem;color:var(--mut2);line-height:1.6;margin-bottom:12px;}
+.upgrade-link{font-size:.78rem;color:var(--g);text-decoration:none;font-weight:600;
+  display:flex;align-items:center;gap:4px;transition:gap .2s;}
+.upgrade-link:hover{gap:8px;}
+
+@media(max-width:768px){
+  .layout-grid{grid-template-columns:1fr;}
+  .features{grid-template-columns:1fr;}
+  .tf-grid{grid-template-columns:repeat(3,1fr);}
+  .report-sections{grid-template-columns:1fr;}
+  main{padding:20px 14px 60px;}
+  .hero{padding:28px 0 36px;}
 }
 </style>
 </head>
 <body>
+<div class="top-glow"></div>
 
-<!-- ═══════════ NAVBAR ═══════════ -->
-<nav id="nav">
-  <div class="nav-inner">
-    <a class="nav-logo" href="index.html">MR.<em>GREEN</em> <small style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text3);font-weight:400;letter-spacing:.1em">TRADING TERMINAL</small></a>
-    <div class="nav-links" id="nav-links">
-      <a href="#recursos">Recursos</a>
-      <a href="#como-funciona">Como funciona</a>
-      <a href="paywall.html">Planos</a>
-      <a href="https://trade.vornabroker.com/register?aff=822269&aff_model=revenue&afftrack=" target="_blank" rel="noopener">Corretora</a>
-    </div>
-    <!-- Not logged in -->
-    <div id="nav-auth-btns" class="nav-ctas">
-      <button class="btn-ghost" onclick="openAuth('login')">Entrar</button>
-      <button class="btn-green" onclick="openAuth('register')">✦ Trial 24h grátis</button>
-    </div>
-    <!-- Logged in -->
-    <div id="nav-user-info" class="nav-ctas" style="display:none">
-      <div class="nav-avatar" id="nav-avatar">?</div>
-      <span id="nav-plan-badge" class="nav-plan-badge badge-trial"></span>
-      <button class="btn-ghost" onclick="doLogout()">Sair</button>
-    </div>
-  </div>
-</nav>
-
-<!-- ═══════════ TICKER ═══════════ -->
-<div class="ticker-wrap">
-  <div class="ticker-track" id="ticker-track">
-    <!-- filled by JS -->
+<!-- MODAL LOGIN -->
+<div id="mg-modal">
+  <div class="mbox">
+    <button class="mcls" onclick="MgClose()">&times;</button>
+    <span class="mtag">// Acesso Restrito</span>
+    <h3>Área do Assinante</h3>
+    <p class="msub">Digite o e-mail cadastrado no pagamento</p>
+    <input id="mg-em" type="email" placeholder="seu@email.com">
+    <div class="mmsg" id="mg-msg"></div>
+    <button class="msbtn" id="mg-sb" onclick="MgLogin()">Verificar acesso</button>
   </div>
 </div>
 
-<!-- ═══════════ LANDING VIEW ═══════════ -->
-<div id="view-landing" style="display:none">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero-inner">
+<div class="app">
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-dot"></div>
       <div>
-        <div class="hero-badge">Motor institucional online</div>
-        <h1>Análise técnica de<br><em>nível Wall Street</em><br>a partir de um print.</h1>
-        <p>Envie a foto do seu gráfico e o MR. GREEN devolve um relatório completo em segundos: Bollinger, MACD, RSI, EMA/SMA, OBV, veredito de operação e score de confiabilidade.</p>
-        <div class="hero-ctas">
-          <button class="btn-green btn-green-lg" onclick="openAuth('register')">✦ Começar trial 24h grátis</button>
-          <a href="https://trade.vornabroker.com/register?aff=822269&aff_model=revenue&afftrack=" target="_blank" rel="noopener" class="btn-outline-lg">Abrir conta na corretora</a>
-          <a href="paywall.html" class="btn-ghost-lg">Ver planos →</a>
-        </div>
-        <p class="hero-note">Relatório em &lt;3s · Sem cartão no trial · 5 INDICADORES · 6 TIMEFRAMES</p>
+        <div class="nav-logo-text">MR.GREEN</div>
+        <div class="nav-logo-sub">Trading Terminal</div>
       </div>
-      <div>
-        <div class="signal-mock">
-          <div class="sm-header">
-            <span class="sm-path">mr.green / analysis / EURUSD-M5</span>
-            <span class="sm-live">LIVE</span>
+    </div>
+    <div class="nav-actions">
+      <a class="nav-broker-btn" href="https://trade.vornabroker.com/register?aff=822269&aff_model=revenue&afftrack=" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg>
+        Acessar Corretora
+      </a>
+      <button class="nav-logout" id="btn-logout" onclick="mgLogout()" style="display:none">Sair</button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <div class="hero">
+      <span class="hero-tag">// Nova Análise Disponível</span>
+      <h1>MR. GREEN</h1>
+      <p class="hero-subtitle">Análise técnica institucional via print de gráfico. Motor avançado com Bollinger, MACD, RSI, EMA/SMA e OBV.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="val">5</div>
+          <div class="lbl">Fases de Análise</div>
+        </div>
+        <div class="hero-stat">
+          <div class="val">6</div>
+          <div class="lbl">Timeframes</div>
+        </div>
+        <div class="hero-stat">
+          <div class="val">100%</div>
+          <div class="lbl">Educacional</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="features">
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+        </div>
+        <div class="feat-title">Análise Institucional</div>
+        <div class="feat-desc">5 fases com indicadores técnicos: Bollinger, MACD, RSI, EMA/SMA e OBV combinados.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div class="feat-title">Sinais Profissionais</div>
+        <div class="feat-desc">Direção COMPRA/VENDA com confiabilidade dinâmica e análise de padrões institucionais.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="feat-title">Multi-Timeframe</div>
+        <div class="feat-desc">Análise em M1, M5, M15, M30, H1 e H4. Selecione o timeframe antes de enviar o gráfico.</div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <div class="disclaimer-text">
+        <strong>Aviso educacional:</strong> Este sistema fornece análises técnicas simuladas para fins educacionais.
+        <strong>Você decide e executa:</strong> Todas as decisões de trading são de sua exclusiva responsabilidade. Trading envolve riscos significativos de perda.
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="layout-grid">
+      <!-- LEFT: CONFIG + HISTORY -->
+      <div class="sidebar">
+
+        <!-- CONFIGURAÇÃO -->
+        <div class="sidebar-block">
+          <div class="sidebar-block-header">
+            <div class="sidebar-block-title">Configuração</div>
           </div>
-          <div class="sm-body">
-            <div class="sm-grid">
-              <div class="sm-stat"><div class="lbl">Par</div><div class="val">EUR/USD</div></div>
-              <div class="sm-stat"><div class="lbl">Timeframe</div><div class="val">M5</div></div>
-              <div class="sm-stat"><div class="lbl">Veredito</div><div class="val call">COMPRA ▲</div></div>
-              <div class="sm-stat">
-                <div class="lbl">Confiabilidade</div><div class="val pct">87.4%</div>
-                <div class="sm-bar"><div class="sm-bar-fill" style="width:87.4%"></div></div>
+          <div class="sidebar-block-body">
+            <div class="tf-section">
+              <div class="tf-label">Timeframe da Operação</div>
+              <div class="tf-grid">
+                <button class="tf-btn inactive" id="tf-M1" onclick="selectTF('M1')">M1</button>
+                <button class="tf-btn active"   id="tf-M5" onclick="selectTF('M5')">M5</button>
+                <button class="tf-btn inactive" id="tf-M15" onclick="selectTF('M15')">M15</button>
+                <button class="tf-btn inactive" id="tf-M30" onclick="selectTF('M30')">M30</button>
+                <button class="tf-btn inactive" id="tf-H1" onclick="selectTF('H1')">H1</button>
+                <button class="tf-btn inactive" id="tf-H4" onclick="selectTF('H4')">H4</button>
               </div>
             </div>
-            <div class="sm-indicators">
-              <span class="sm-ind">RSI(14) 32.1</span>
-              <span class="sm-ind">MACD +0.214</span>
-              <span class="sm-ind">EMA9/21 ↑/↑</span>
-              <span class="sm-ind">Bollinger 18%</span>
-              <span class="sm-ind">OBV asc.</span>
+
+            <div class="asset-section">
+              <label class="asset-label" for="asset-input">Par / Ativo (opcional)</label>
+              <div class="asset-input-wrap">
+                <span class="asset-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                <input class="asset-input" id="asset-input" type="text" placeholder="EUR/USD, BTC/USD..." value="EUR/USD">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- FEATURES -->
-  <section class="section" id="recursos">
-    <div class="wrap">
-      <div class="section-header">
-        <div class="section-tag">// recursos</div>
-        <h2 class="section-title">Construído para quem<br>opera de verdade.</h2>
-        <p class="section-sub">Cada print que você envia passa pelo mesmo motor — sem dependências externas, sem chamadas a APIs lentas.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feat-card"><div class="feat-icon">⚙️</div><div class="feat-title">Motor institucional</div><div class="feat-desc">5 fases de análise em paralelo: pré-processamento, extração de candles, cálculo de indicadores, convergência e veredito.</div></div>
-        <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">5 indicadores técnicos</div><div class="feat-desc">Bollinger Bands, MACD, RSI(14), EMA 9/21 e OBV combinados em um único score de confiabilidade.</div></div>
-        <div class="feat-card"><div class="feat-icon">🎯</div><div class="feat-title">Veredito COMPRA / VENDA</div><div class="feat-desc">Score dinâmico de 55% a 92% com base na convergência real entre os indicadores — sem números mágicos.</div></div>
-        <div class="feat-card"><div class="feat-icon">⏱️</div><div class="feat-title">6 timeframes</div><div class="feat-desc">Trabalhe em M1, M5, M15, M30, H1 ou H4. Cada timeframe é analisado com pesos próprios para máxima precisão.</div></div>
-        <div class="feat-card"><div class="feat-icon">📁</div><div class="feat-title">Histórico completo</div><div class="feat-desc">Toda análise fica salva na sua conta. Compare prints, revise vereditos e acompanhe sua evolução como trader.</div></div>
-        <div class="feat-card"><div class="feat-icon">📋</div><div class="feat-title">Relatório profissional</div><div class="feat-desc">Veredito, confiabilidade e justificativa de cada indicador num só painel. Pronto para sua mesa de operação.</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section" id="como-funciona" style="background:var(--bg2)">
-    <div class="wrap">
-      <div class="section-header">
-        <div class="section-tag">// fluxo de operação</div>
-        <h2 class="section-title">Do print à decisão<br>em 3 segundos.</h2>
-      </div>
-      <div class="steps-grid">
-        <div class="step-card"><div class="step-num">01</div><div class="step-title">Selecione o timeframe</div><div class="step-desc">Escolha entre M1, M5, M15, M30, H1 ou H4 antes de enviar o gráfico.</div></div>
-        <div class="step-card"><div class="step-num">02</div><div class="step-title">Envie o print do gráfico</div><div class="step-desc">Arraste e solte (PNG/JPG). Mantenha candles, eixos e barra superior visíveis.</div></div>
-        <div class="step-card"><div class="step-num">03</div><div class="step-title">Receba o relatório</div><div class="step-desc">Veredito COMPRA/VENDA, confiabilidade e justificativa de cada indicador em segundos.</div></div>
-        <div class="step-card"><div class="step-num">04</div><div class="step-title">Decida e execute</div><div class="step-desc">Você é o trader — o MR. GREEN é seu copiloto técnico, não um robô de sinais.</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PLANS PREVIEW -->
-  <section class="section" id="planos">
-    <div class="wrap">
-      <div class="section-header" style="text-align:center;max-width:100%">
-        <div class="section-tag" style="justify-content:center;display:flex">// planos de acesso</div>
-        <h2 class="section-title" style="text-align:center">Escolha o seu plano.</h2>
-        <p class="section-sub" style="margin:0 auto">Acesso liberado imediatamente após a confirmação do pagamento.</p>
-      </div>
-      <div class="plans-grid">
-        <div class="plan-card">
-          <div class="plan-period">MENSAL</div>
-          <div class="plan-price"><span class="cur">R$</span><span class="amt">97</span></div>
-          <div class="plan-recur">/mês · renovação automática</div>
-          <ul class="plan-feats">
-            <li>Análises ilimitadas por print</li>
-            <li>Motor institucional completo</li>
-            <li>Bollinger, MACD, RSI, EMA/SMA, OBV</li>
-            <li>Histórico de análises</li>
-            <li>Suporte via e-mail</li>
-          </ul>
-          <button class="btn-plan-m" onclick="window.location.href='paywall.html'">Assinar Mensal →</button>
+        <!-- HISTÓRICO -->
+        <div class="sidebar-block">
+          <div class="sidebar-block-header">
+            <div class="sidebar-block-title">Histórico</div>
+            <button class="history-clear" onclick="clearHistory()">Limpar</button>
+          </div>
+          <div class="history-body" id="history-list">
+            <div class="history-empty" id="history-empty">// nenhuma análise ainda</div>
+          </div>
         </div>
-        <div class="plan-card featured">
-          <div class="plan-badge">⭐ MAIS ESCOLHIDO</div>
-          <div class="plan-period">VITALÍCIO</div>
-          <div class="plan-price"><span class="cur">R$</span><span class="amt">147</span></div>
-          <div class="plan-recur">pagamento único · acesso para sempre</div>
-          <ul class="plan-feats">
-            <li>Tudo do plano Mensal</li>
-            <li>Sem mensalidade — para sempre</li>
-            <li>Todas as atualizações futuras inclusas</li>
-            <li>Suporte prioritário</li>
-            <li>Acesso vitalício à conta</li>
-          </ul>
-          <button class="btn-plan-g" onclick="window.location.href='paywall.html'">Garantir Vitalício →</button>
-        </div>
-      </div>
-      <p class="plans-note">🔒 Pagamento seguro via PerfectPay · SSL 256-bit</p>
-    </div>
-  </section>
 
-  <!-- WARNING -->
-  <div class="wrap" style="padding-bottom:3rem">
-    <div class="warning-box">
-      <p><strong>⚠️ Aviso importante:</strong> Este sistema fornece <strong>análises técnicas para fins educacionais</strong>. Todas as decisões de trading são de sua exclusiva responsabilidade. Não há garantias de resultado — trading envolve riscos significativos de perda de capital.</p>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <div class="footer-inner">
-        <div class="footer-logo">MR.GREEN · TRADING TERMINAL</div>
-        <div class="footer-links">
-          <a href="#recursos">Recursos</a>
-          <a href="paywall.html">Planos</a>
-          <a href="#" onclick="openAuth('login');return false">Entrar</a>
+        <!-- UPGRADE -->
+        <div class="upgrade-block">
+          <div class="upgrade-tag">// Upgrade</div>
+          <div class="upgrade-title">Acesso ilimitado para sempre</div>
+          <div class="upgrade-desc">Pague uma vez, use sem limites. Veja os planos disponíveis.</div>
+          <a class="upgrade-link" href="paywall.html">Ver planos →</a>
         </div>
-        <div class="footer-note">© 2026 MR.GREEN · Ferramenta educacional de análise técnica</div>
+
+      </div>
+
+      <!-- RIGHT: ANÁLISE + RESULTADO -->
+      <div>
+        <!-- TERMINAL ANÁLISE -->
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-header-left">
+              <div class="term-dots">
+                <div class="term-dot"></div>
+                <div class="term-dot"></div>
+                <div class="term-dot"></div>
+              </div>
+              <div class="term-title">// Nova Análise</div>
+            </div>
+            <div class="term-tf-badge" id="tf-display">TF · M5</div>
+          </div>
+          <div class="terminal-body">
+            <p style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-family:var(--mono);margin-bottom:12px;">
+              Selecione o gráfico para análise
+            </p>
+            <p style="font-size:.75rem;color:var(--mut);margin-bottom:16px;">
+              PNG/JPG • Máx 2 MB • Mantenha candles, eixos e barra superior visíveis.
+            </p>
+
+            <!-- UPLOAD ZONE -->
+            <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+                 ondragover="event.preventDefault();this.classList.add('drag')"
+                 ondragleave="this.classList.remove('drag')"
+                 ondrop="handleDrop(event)">
+              <input type="file" accept="image/png,image/jpeg,image/jpg" class="hidden" id="file-input" style="display:none" onchange="handleFileSelect(event)">
+              <div id="upload-default">
+                <div class="upload-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                </div>
+                <p class="upload-main">Arraste seu gráfico aqui ou clique para selecionar</p>
+                <p class="upload-sub">PNG ou JPG até 2 MB</p>
+                <span class="upload-btn-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                  Selecionar Arquivo
+                </span>
+              </div>
+              <div id="upload-preview-area" style="display:none;text-align:center;">
+                <img id="upload-preview" class="upload-preview" style="display:block;margin:0 auto 8px;" alt="">
+                <span class="upload-file-info" id="upload-file-info" style="display:inline-block;"></span>
+                <br><button onclick="event.stopPropagation();resetUpload()" style="margin-top:10px;background:transparent;border:1px solid var(--brd2);color:var(--mut2);border-radius:5px;padding:5px 14px;font-size:.72rem;cursor:pointer;font-family:var(--font);">Trocar imagem</button>
+              </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="action-row">
+              <button class="btn-analyze" id="btn-analyze" onclick="runAnalysis()" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Executar Análise Institucional
+              </button>
+              <a class="btn-broker-main" href="https://trade.vornabroker.com/register?aff=822269&aff_model=revenue&afftrack=" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg>
+                Acessar Corretora para Operar
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- RELATÓRIO -->
+        <div class="report-panel" style="margin-top:16px;">
+          <div class="report-header">
+            <div class="report-header-left">
+              <div class="report-status" id="report-status">
+                <div class="report-status-dot" id="report-dot"></div>
+                <span id="report-status-text">AGUARDANDO ENTRADA</span>
+              </div>
+            </div>
+          </div>
+          <div class="report-body">
+            <div class="report-empty" id="report-empty">
+              <div class="report-empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+              </div>
+              <div class="report-empty-text">O relatório aparecerá aqui<br>assim que você executar uma análise.</div>
+            </div>
+            <div id="report-loading" style="display:none;padding:24px 0;">
+              <div class="loading-spinner"></div>
+              <div class="loading-label" id="loading-label">Iniciando análise...</div>
+            </div>
+            <div class="report-content" id="report-content">
+              <div class="report-signal-row">
+                <div>
+                  <div style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-family:var(--mono);margin-bottom:6px;">Sinal</div>
+                  <span class="signal-badge" id="signal-badge">—</span>
+                </div>
+                <div class="signal-meta">
+                  <div class="signal-meta-item">
+                    <div class="sm-label">Ativo</div>
+                    <div class="sm-val" id="sig-asset">—</div>
+                  </div>
+                  <div class="signal-meta-item">
+                    <div class="sm-label">Timeframe</div>
+                    <div class="sm-val" id="sig-tf">—</div>
+                  </div>
+                  <div class="signal-meta-item">
+                    <div class="sm-label">Confiança</div>
+                    <div class="sm-val" id="sig-confidence" style="color:var(--g)">—</div>
+                  </div>
+                </div>
+              </div>
+              <div class="report-sections">
+                <div class="report-section">
+                  <div class="report-section-title">Contexto do Mercado</div>
+                  <div class="report-text" id="rep-context">—</div>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-title">Indicadores Técnicos</div>
+                  <div class="report-text" id="rep-indicators">—</div>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-title">Padrões Identificados</div>
+                  <div class="report-text" id="rep-patterns">—</div>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-title">Gestão de Risco</div>
+                  <div class="report-text" id="rep-risk">—</div>
+                </div>
+              </div>
+              <div class="report-section" style="margin-bottom:12px;">
+                <div class="report-section-title">Recomendação Final</div>
+                <div class="report-text" id="rep-final">—</div>
+              </div>
+              <a class="btn-broker-main" style="margin-top:8px;" href="https://trade.vornabroker.com/register?aff=822269&aff_model=revenue&afftrack=" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg>
+                Abrir Corretora e Operar Agora
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-  </footer>
+  </main>
 </div>
 
-<!-- ═══════════ DASHBOARD VIEW ═══════════ -->
-<div id="view-dashboard" style="display:none">
-  <div class="dash-wrap">
-    <div class="dash-greeting" id="dash-greeting">Bem-vindo de volta,</div>
-    <div class="dash-name" id="dash-name">Trader</div>
-
-    <!-- Status card -->
-    <div class="dash-status" id="dash-status-card">
-      <div class="dash-status-icon trial" id="dash-status-icon">⏱️</div>
-      <div class="dash-status-text">
-        <h3 id="dash-status-title">Trial Gratuito</h3>
-        <p id="dash-status-sub">Seu período de teste está ativo. Explore todas as funcionalidades.</p>
-      </div>
-      <div class="dash-timer" id="dash-timer" style="display:none">00:00:00</div>
-    </div>
-
-    <!-- Main CTA -->
-    <a href="operations.html" class="dash-cta">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      Ir para a Plataforma de Análise
-    </a>
-
-    <!-- Secondary -->
-    <div class="dash-secondary-btns">
-      <a href="paywall.html" class="dash-sec-btn">📋 Ver planos de acesso</a>
-      <a href="https://trade.vornabroker.com/register?aff=822269&aff_model=revenue&afftrack=" target="_blank" rel="noopener" class="dash-sec-btn">🏦 Acessar Corretora</a>
-    </div>
-
-    <!-- Quick stats -->
-    <div class="dash-stats-grid">
-      <div class="dash-stat"><span class="val">5</span><span class="lbl">Indicadores</span></div>
-      <div class="dash-stat"><span class="val">6</span><span class="lbl">Timeframes</span></div>
-      <div class="dash-stat"><span class="val">&lt;3s</span><span class="lbl">Por análise</span></div>
-    </div>
-
-    <div style="text-align:center;margin-top:1rem">
-      <button onclick="doLogout()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;text-decoration:underline">Sair da conta</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════ AUTH MODAL ═══════════ -->
-<div class="modal-overlay" id="auth-modal" style="display:none" onclick="if(event.target===this)closeAuth()">
-  <div class="modal-card">
-    <button class="modal-close" onclick="closeAuth()">✕</button>
-    <div class="modal-logo">
-      <div class="modal-logo-icon">MG</div>
-      <h2>MR. GREEN</h2>
-      <p>Plataforma de análise técnica profissional</p>
-    </div>
-
-    <div id="register-trial-note" class="trial-note" style="display:none">
-      🎁 Crie sua conta e ganhe <strong>24 horas grátis</strong> — sem cartão
-    </div>
-
-    <div class="tabs">
-      <div class="tab active" id="tab-login" onclick="switchTab('login')">Entrar</div>
-      <div class="tab" id="tab-register" onclick="switchTab('register')">Criar Conta</div>
-    </div>
-
-    <div id="field-name" class="field" style="display:none">
-      <label>Nome</label>
-      <input type="text" id="inp-name" placeholder="Seu nome completo" autocomplete="name">
-    </div>
-    <div class="field">
-      <label>E-mail</label>
-      <input type="email" id="inp-email" placeholder="seu@email.com" autocomplete="email">
-    </div>
-    <div class="field">
-      <label>Senha</label>
-      <input type="password" id="inp-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()">
-    </div>
-
-    <button class="btn-submit" id="btn-auth" onclick="doAuth()">Entrar</button>
-    <div class="auth-msg" id="auth-msg"></div>
-  </div>
-</div>
-
-<!-- ═══════════ SCRIPTS ═══════════ -->
 <script>
-/* ════════════════════════════════════════════════
-   CONFIG
-════════════════════════════════════════════════ */
-var SB_URL  = 'https://lgwqjhydasdnxxalpglm.supabase.co';
-var SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxnd3FqaHlkYXNkbnh4YWxwZ2xtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzkwNTUsImV4cCI6MjA5MzE1NTA1NX0.c5Pu51dQwWAwYOIJRQgJVG8MApBpmg_k_r8A9Ip_bRM';
-var TRIAL_KEY   = 'mrgreen_trial';
-var SESSION_KEY = 'mrgreen_session';
-var TRIAL_MS    = 24 * 60 * 60 * 1000;
+// ═══════════════════════════════════════════════════════════════════
+//  MR. GREEN — Sistema de Trial + Paywall + Supabase
+// ═══════════════════════════════════════════════════════════════════
+(function MrGreenAccess() {
+  'use strict';
+  var TRIAL_KEY   = 'mrgreen_trial';
+  var SESSION_KEY = 'mrgreen_session';
+  var TRIAL_MS    = 24 * 60 * 60 * 1000;
 
-var sb = supabase.createClient(SB_URL, SB_KEY);
+  function getTrialData() { try { return JSON.parse(localStorage.getItem(TRIAL_KEY)); } catch(e) { return null; } }
+  function getSessionData() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e) { return null; } }
 
-/* ════════════════════════════════════════════════
-   HELPERS
-════════════════════════════════════════════════ */
-function getSession(){ try{ return JSON.parse(localStorage.getItem(SESSION_KEY)); }catch{ return null; } }
-function getTrial(){   try{ return JSON.parse(localStorage.getItem(TRIAL_KEY));   }catch{ return null; } }
-
-function checkAccess(s){
-  if(!s || !s.email) return { ok:false, reason:'not_logged' };
-  if(s.plan==='lifetime') return { ok:true };
-  if(s.plan==='monthly'){
-    if(s.expires_at && new Date(s.expires_at) > new Date()) return { ok:true };
-    if(!s.expires_at && Date.now() < (s.checked||0)+30*24*3600000) return { ok:true };
-    return { ok:false, reason:'expired' };
-  }
-  var t = getTrial();
-  if(!t) return { ok:false, reason:'no_trial' };
-  var rem = (t.start + TRIAL_MS) - Date.now();
-  if(rem > 0) return { ok:true, trial:true, remaining:rem };
-  return { ok:false, reason:'trial_expired' };
-}
-
-function translateError(msg){
-  if(!msg) return 'Erro desconhecido.';
-  if(msg.includes('User already registered')||msg.includes('already been registered')) return 'Este e-mail já está cadastrado. Faça o login.';
-  if(msg.includes('Invalid login credentials')||msg.includes('invalid_credentials')) return 'E-mail ou senha incorretos.';
-  if(msg.includes('Email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
-  if(msg.includes('Password should be')||msg.includes('password')) return 'A senha deve ter pelo menos 6 caracteres.';
-  if(msg.includes('rate limit')||msg.includes('too many')) return 'Muitas tentativas. Aguarde alguns minutos.';
-  if(msg.includes('network')||msg.includes('fetch')) return 'Erro de conexão. Verifique sua internet.';
-  return msg;
-}
-
-/* ════════════════════════════════════════════════
-   AUTH MODAL
-════════════════════════════════════════════════ */
-var authMode = 'login';
-
-function openAuth(mode){
-  authMode = mode || 'login';
-  switchTab(authMode);
-  document.getElementById('auth-modal').style.display = 'flex';
-  setTimeout(function(){
-    var f = document.getElementById(mode==='register'?'inp-name':'inp-email');
-    if(f) f.focus();
-  }, 80);
-}
-
-function closeAuth(){
-  document.getElementById('auth-modal').style.display = 'none';
-  setAuthMsg('','');
-}
-
-function switchTab(mode){
-  authMode = mode;
-  document.getElementById('tab-login').classList.toggle('active', mode==='login');
-  document.getElementById('tab-register').classList.toggle('active', mode==='register');
-  document.getElementById('field-name').style.display = mode==='register'?'block':'none';
-  document.getElementById('register-trial-note').style.display = mode==='register'?'block':'none';
-  document.getElementById('btn-auth').textContent = mode==='register'?'Criar conta grátis':'Entrar';
-  document.getElementById('inp-pass').setAttribute('autocomplete', mode==='register'?'new-password':'current-password');
-  setAuthMsg('','');
-}
-
-function setAuthMsg(msg, type){
-  var el = document.getElementById('auth-msg');
-  el.textContent = msg;
-  el.className = 'auth-msg' + (type?' '+type:'');
-}
-
-function setAuthLoading(on){
-  var btn = document.getElementById('btn-auth');
-  btn.disabled = on;
-  if(on){ btn.textContent = 'Aguarde...'; }
-  else { btn.textContent = authMode==='register'?'Criar conta grátis':'Entrar'; }
-}
-
-async function doAuth(){
-  var name  = (document.getElementById('inp-name')||{}).value||'';
-  var email = document.getElementById('inp-email').value.trim().toLowerCase();
-  var pass  = document.getElementById('inp-pass').value;
-  setAuthMsg('','');
-
-  if(authMode==='register'){
-    if(!name.trim()){ setAuthMsg('Informe seu nome.','err'); return; }
-    if(!email||email.indexOf('@')<0){ setAuthMsg('E-mail inválido.','err'); return; }
-    if(pass.length<6){ setAuthMsg('Senha deve ter pelo menos 6 caracteres.','err'); return; }
-    setAuthLoading(true);
-    try {
-      var r = await sb.auth.signUp({ email:email, password:pass, options:{ data:{ name:name.trim() } } });
-      if(r.error) throw r.error;
-
-      var trialStart = Date.now();
-      localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:trialStart, version:1 }));
-      localStorage.setItem(SESSION_KEY, JSON.stringify({ email:email, name:name.trim(), plan:'trial', checked:Date.now() }));
-
-      // Try inserting into users table (non-blocking)
-      sb.from('users').upsert({ id:r.data.user.id, email:email, name:name.trim(), plan:'trial' }, { onConflict:'email' }).then(function(){}).catch(function(){});
-
-      setAuthMsg('Conta criada! Carregando...','ok');
-      setTimeout(function(){ closeAuth(); enterDashboard(); }, 900);
-    } catch(e){
-      setAuthMsg(translateError(e.message),'err');
-      setAuthLoading(false);
+  function hasValidSession() {
+    var d = getSessionData();
+    if (!d || !d.plan || !d.email) return false;
+    if (d.plan === 'lifetime') return true;
+    if (d.plan === 'monthly') {
+      if (d.expires_at) return new Date(d.expires_at) > new Date();
+      return Date.now() < d.checked + 30 * 24 * 60 * 60 * 1000;
     }
-
-  } else {
-    if(!email||email.indexOf('@')<0){ setAuthMsg('E-mail inválido.','err'); return; }
-    if(!pass){ setAuthMsg('Informe sua senha.','err'); return; }
-    setAuthLoading(true);
-    try {
-      // Try Supabase Auth first
-      var r = await sb.auth.signInWithPassword({ email:email, password:pass });
-      if(r.error) throw r.error;
-
-      // Fetch user plan from users table
-      var uRes = await sb.from('users').select('*').eq('email',email).maybeSingle();
-      var u = uRes.data;
-
-      if(u){
-        if(u.plan==='trial'){
-          var existingTrial = getTrial();
-          if(!existingTrial){
-            var ts = u.trial_starts_at ? new Date(u.trial_starts_at).getTime() : Date.now();
-            localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:ts, version:1 }));
-          }
-        }
-        localStorage.setItem(SESSION_KEY, JSON.stringify({
-          email:u.email, name:u.name||email.split('@')[0], plan:u.plan,
-          expires_at:u.expires_at||null, checked:Date.now()
-        }));
-      } else {
-        // Fallback: no users table record
-        if(!getTrial()) localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:Date.now(), version:1 }));
-        localStorage.setItem(SESSION_KEY, JSON.stringify({ email:email, plan:'trial', checked:Date.now() }));
-      }
-
-      setAuthMsg('Acesso liberado! Carregando...','ok');
-      setTimeout(function(){ closeAuth(); enterDashboard(); }, 800);
-    } catch(e){
-      // Fallback: legacy email-only login (for users without password)
-      try {
-        var uRes2 = await sb.from('users').select('*').eq('email',email).maybeSingle();
-        var u2 = uRes2.data;
-        if(u2 && (u2.plan==='monthly'||u2.plan==='lifetime')){
-          if(u2.plan==='trial'){
-            if(!getTrial()) localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:Date.now(), version:1 }));
-          }
-          localStorage.setItem(SESSION_KEY, JSON.stringify({
-            email:u2.email, name:u2.name||'', plan:u2.plan,
-            expires_at:u2.expires_at||null, checked:Date.now()
-          }));
-          setAuthMsg('Acesso liberado!','ok');
-          setTimeout(function(){ closeAuth(); enterDashboard(); }, 800);
-          return;
-        }
-      } catch(_){}
-      setAuthMsg(translateError(e.message),'err');
-      setAuthLoading(false);
-    }
+    return false;
   }
-}
 
-function doLogout(){
-  sb.auth.signOut().catch(function(){});
-  localStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem(TRIAL_KEY);
-  showLanding();
-}
+  function startTrial() { localStorage.setItem(TRIAL_KEY, JSON.stringify({ start: Date.now(), version: 1 })); }
+  function isTrialExpired(d) { return Date.now() > d.start + TRIAL_MS; }
+  function getRemaining(d) { return Math.max(0, (d.start + TRIAL_MS) - Date.now()); }
+  function formatMs(ms) {
+    var h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000), s = Math.floor((ms % 60000) / 1000);
+    return String(h).padStart(2,'0') + 'h ' + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's';
+  }
 
-/* ════════════════════════════════════════════════
-   VIEWS
-════════════════════════════════════════════════ */
-function showLanding(){
-  document.getElementById('view-landing').style.display = 'block';
-  document.getElementById('view-dashboard').style.display = 'none';
-  document.getElementById('nav-auth-btns').style.display = 'flex';
-  document.getElementById('nav-user-info').style.display = 'none';
-}
-
-function enterDashboard(){
-  var s = getSession();
-  if(!s) { showLanding(); return; }
-  var access = checkAccess(s);
-  if(!access.ok){
-    if(access.reason==='trial_expired'||access.reason==='expired') window.location.href='paywall.html';
-    else showLanding();
+  if (hasValidSession()) {
+    document.getElementById('btn-logout').style.display = 'block';
     return;
   }
-  renderDashboard(s, access);
-  document.getElementById('view-landing').style.display = 'none';
-  document.getElementById('view-dashboard').style.display = 'block';
-  document.getElementById('nav-auth-btns').style.display = 'none';
-  document.getElementById('nav-user-info').style.display = 'flex';
 
-  // Nav: avatar + badge
-  var name = s.name || s.email.split('@')[0];
-  document.getElementById('nav-avatar').textContent = name.charAt(0).toUpperCase();
-  var planBadge = document.getElementById('nav-plan-badge');
-  if(s.plan==='lifetime'){planBadge.textContent='VITALÍCIO';planBadge.className='nav-plan-badge badge-lifetime';}
-  else if(s.plan==='monthly'){planBadge.textContent='MENSAL';planBadge.className='nav-plan-badge badge-monthly';}
-  else{planBadge.textContent='TRIAL';planBadge.className='nav-plan-badge badge-trial';}
-}
+  var trial = getTrialData();
+  if (!trial) { startTrial(); trial = getTrialData(); }
+  if (isTrialExpired(trial)) { window.location.href = 'paywall.html'; return; }
 
-function renderDashboard(s, access){
-  var name = s.name || s.email.split('@')[0];
-  document.getElementById('dash-name').textContent = name;
+  injectTrialBanner(getRemaining(trial), !JSON.parse(localStorage.getItem('mrgreen_trial') || '{}').shown);
+  localStorage.setItem(TRIAL_KEY, JSON.stringify(Object.assign(JSON.parse(localStorage.getItem(TRIAL_KEY)), { shown: true })));
 
-  var icon = document.getElementById('dash-status-icon');
-  var title = document.getElementById('dash-status-title');
-  var sub = document.getElementById('dash-status-sub');
-  var timer = document.getElementById('dash-timer');
+  function injectTrialBanner(remaining, isFirst) {
+    var inject = function() {
+      var bar = document.createElement('div');
+      bar.id = 'mrgreen-trial-bar';
+      var msg = isFirst
+        ? '<strong>Bem-vindo! Seu trial gratuito de 24h começou agora.</strong> Aproveite: '
+        : 'Seu <strong>período gratuito</strong> encerra em: ';
+      bar.innerHTML =
+        '<div class="tbar-left">' +
+          '<span class="tbar-pulse"></span>' +
+          '<span class="tbar-label">Trial</span>' +
+          '<div class="tbar-text">' + msg +
+            '<span class="tbar-countdown" id="tbar-cd">' + formatMs(remaining) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tbar-actions">' +
+          '<button class="tbar-login" onclick="MgOpen()">Já sou assinante</button>' +
+          '<button class="tbar-btn" onclick="window.location.href=\'paywall.html\'">Assinar agora</button>' +
+        '</div>';
+      document.body.prepend(bar);
+      document.querySelector('.app').style.paddingTop = '48px';
 
-  if(s.plan==='lifetime'){
-    icon.textContent='👑'; icon.className='dash-status-icon paid';
-    title.textContent='Plano Vitalício Ativo';
-    sub.textContent='Acesso ilimitado e permanente à plataforma.';
-    timer.style.display='none';
-  } else if(s.plan==='monthly'){
-    icon.textContent='✅'; icon.className='dash-status-icon paid';
-    title.textContent='Plano Mensal Ativo';
-    sub.textContent='Acesso completo renovado automaticamente todo mês.';
-    timer.style.display='none';
-  } else {
-    icon.textContent='⏱️'; icon.className='dash-status-icon trial';
-    title.textContent='Trial Gratuito Ativo';
-    sub.textContent='Explore todas as funcionalidades sem restrições.';
-    timer.style.display='flex';
-    startTrialTimer(access.remaining);
+      var ms = remaining;
+      var tick = setInterval(function() {
+        ms -= 1000;
+        var el = document.getElementById('tbar-cd');
+        if (!el) { clearInterval(tick); return; }
+        if (ms <= 0) { clearInterval(tick); window.location.href = 'paywall.html'; return; }
+        el.textContent = formatMs(ms);
+      }, 1000);
+    };
+    if (document.readyState === 'complete') inject(); else window.addEventListener('load', inject);
   }
-}
 
-var timerInt = null;
-function startTrialTimer(remaining){
-  if(timerInt) clearInterval(timerInt);
-  function fmt(ms){
-    var h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
-    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-  }
-  var end = Date.now() + remaining;
-  timerInt = setInterval(function(){
-    var rem = Math.max(0, end - Date.now());
-    var el = document.getElementById('dash-timer');
-    if(el) el.textContent = fmt(rem);
-    if(rem<=0){ clearInterval(timerInt); window.location.href='paywall.html'; }
-  }, 1000);
-  document.getElementById('dash-timer').textContent = fmt(remaining);
-}
+  window.MgOpen = function() {
+    var m = document.getElementById('mg-modal'); if (m) { m.className = 'open'; setTimeout(function(){ var e=document.getElementById('mg-em'); if(e) e.focus(); }, 80); }
+  };
+  window.MgClose = function() {
+    var m=document.getElementById('mg-modal'); if(m) m.className='';
+    var msg=document.getElementById('mg-msg'); if(msg) msg.textContent='';
+    var i=document.getElementById('mg-em'); if(i) i.value='';
+  };
+  window.MgLogin = async function() {
+    var SB_URL='https://lgwqjhydasdnxxalpglm.supabase.co';
+    var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxnd3FqaHlkYXNkbnh4YWxwZ2xtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzkwNTUsImV4cCI6MjA5MzE1NTA1NX0.c5Pu51dQwWAwYOIJRQgJVG8MApBpmg_k_r8A9Ip_bRM';
+    var SK='mrgreen_session';
+    var i=document.getElementById('mg-em'),msg=document.getElementById('mg-msg'),btn=document.getElementById('mg-sb');
+    if(!i||!msg||!btn) return;
+    var email=i.value.trim().toLowerCase();
+    if(!email||email.indexOf('@')<0){msg.style.color='#EF4444';msg.textContent='E-mail inválido.';return;}
+    btn.textContent='Verificando...';btn.disabled=true;msg.style.color='#5a5a6a';msg.textContent='Consultando...';
+    try {
+      var r=await fetch(SB_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=*',
+        {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      var d=await r.json();var user=d&&d.length>0?d[0]:null;
+      if(!user){msg.style.color='#EF4444';msg.textContent='E-mail não encontrado.';btn.textContent='Verificar acesso';btn.disabled=false;return;}
+      var active=user.plan==='lifetime'||(user.plan==='monthly'&&user.expires_at&&new Date(user.expires_at)>new Date());
+      if(!active){msg.style.color='#EF4444';msg.textContent='Plano expirado.';btn.textContent='Verificar acesso';btn.disabled=false;return;}
+      localStorage.setItem(SK,JSON.stringify({email:user.email,plan:user.plan,checked:Date.now(),expires_at:user.expires_at||null}));
+      msg.style.color='#22C55E';msg.textContent='Acesso liberado! Carregando...';
+      setTimeout(function(){window.location.reload();},900);
+    } catch(e){msg.style.color='#EF4444';msg.textContent='Erro de conexão.';btn.textContent='Verificar acesso';btn.disabled=false;}
+  };
+})();
 
-/* ════════════════════════════════════════════════
-   TICKER
-════════════════════════════════════════════════ */
-(function(){
-  var tickers = [
-    {pair:'EUR/USD',price:'1.0842',chg:'+0.21%',up:true},
-    {pair:'GBP/USD',price:'1.2674',chg:'-0.08%',up:false},
-    {pair:'USD/JPY',price:'151.32',chg:'+0.44%',up:true},
-    {pair:'BTC/USDT',price:'67,420',chg:'+1.82%',up:true},
-    {pair:'ETH/USDT',price:'3,124',chg:'+0.97%',up:true},
-    {pair:'XAU/USD',price:'2,348',chg:'-0.15%',up:false},
-    {pair:'AUD/USD',price:'0.6612',chg:'+0.33%',up:true},
-    {pair:'USD/CAD',price:'1.3585',chg:'-0.12%',up:false},
-    {pair:'NASDAQ',price:'18,254',chg:'+0.61%',up:true},
-    {pair:'S&P500',price:'5,478',chg:'+0.28%',up:true},
-  ];
-  var html = '';
-  // Duplicate for seamless loop
-  for(var pass=0;pass<2;pass++){
-    tickers.forEach(function(t){
-      html += '<div class="ticker-item">'
-        +'<span class="ticker-pair">'+t.pair+'</span>'
-        +'<span class="ticker-price">'+t.price+'</span>'
-        +'<span class="ticker-chg '+(t.up?'up':'down')+'">'+t.chg+'</span>'
-        +'</div>';
+window.mgLogout = function() {
+  localStorage.removeItem('mrgreen_session');
+  window.location.reload();
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  TIMEFRAME
+// ═══════════════════════════════════════════════════════════════════
+var currentTF = 'M5';
+window.selectTF = function(tf) {
+  ['M1','M5','M15','M30','H1','H4'].forEach(function(t){
+    var el = document.getElementById('tf-'+t);
+    if (el) el.className = 'tf-btn ' + (t===tf ? 'active' : 'inactive');
+  });
+  currentTF = tf;
+  var display = document.getElementById('tf-display');
+  if (display) display.textContent = 'TF · ' + tf;
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  UPLOAD
+// ═══════════════════════════════════════════════════════════════════
+var selectedFile = null;
+var selectedBase64 = null;
+
+window.handleFileSelect = function(e) {
+  var f = e.target.files[0];
+  if (f) processFile(f);
+};
+window.handleDrop = function(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  var f = e.dataTransfer.files[0];
+  if (f) processFile(f);
+};
+function processFile(f) {
+  if (!f.type.match(/image\/(png|jpeg|jpg)/)) { alert('Formato inválido. Use PNG ou JPG.'); return; }
+  if (f.size > 2 * 1024 * 1024) { alert('Arquivo muito grande. Máximo 2 MB.'); return; }
+  selectedFile = f;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    selectedBase64 = ev.target.result.split(',')[1];
+    document.getElementById('upload-default').style.display = 'none';
+    document.getElementById('upload-preview-area').style.display = 'block';
+    document.getElementById('upload-preview').src = ev.target.result;
+    document.getElementById('upload-preview').style.display = 'block';
+    document.getElementById('upload-file-info').style.display = 'inline-block';
+    document.getElementById('upload-file-info').textContent = f.name + ' · ' + (f.size/1024).toFixed(0) + ' KB';
+    document.getElementById('upload-zone').classList.add('has-file');
+    document.getElementById('btn-analyze').disabled = false;
+  };
+  reader.readAsDataURL(f);
+}
+window.resetUpload = function() {
+  selectedFile = null; selectedBase64 = null;
+  document.getElementById('upload-default').style.display = 'block';
+  document.getElementById('upload-preview-area').style.display = 'none';
+  document.getElementById('upload-zone').classList.remove('has-file');
+  document.getElementById('btn-analyze').disabled = true;
+  document.getElementById('file-input').value = '';
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  ANÁLISE (Claude API)
+// ═══════════════════════════════════════════════════════════════════
+var loadingSteps = [
+  'Carregando gráfico...', 'Identificando padrões...','Calculando indicadores...',
+  'Analisando volume...','Verificando tendência...','Gerando relatório...'
+];
+
+window.runAnalysis = async function() {
+  if (!selectedBase64) return;
+  var asset = document.getElementById('asset-input').value.trim() || 'N/D';
+
+  // UI: loading state
+  document.getElementById('report-empty').style.display = 'none';
+  document.getElementById('report-loading').style.display = 'block';
+  document.getElementById('report-content').style.display = 'none';
+  document.getElementById('report-status-text').textContent = 'PROCESSANDO';
+  document.getElementById('report-dot').classList.add('live');
+  document.getElementById('btn-analyze').disabled = true;
+
+  var step = 0;
+  var stepTimer = setInterval(function() {
+    step = (step+1) % loadingSteps.length;
+    var el = document.getElementById('loading-label');
+    if (el) el.textContent = loadingSteps[step];
+  }, 1400);
+
+  var prompt = 'Você é um analista técnico institucional sênior especializado em opções binárias e mercado financeiro.\n' +
+    'Analise este gráfico de trading para o ativo ' + asset + ' no timeframe ' + currentTF + '.\n\n' +
+    'Forneça uma análise técnica profissional com base em:\n' +
+    '- Tendência predominante (alta/baixa/lateral)\n' +
+    '- Indicadores técnicos visíveis: Bollinger Bands, MACD, RSI, EMA/SMA, OBV\n' +
+    '- Padrões de candlestick identificados\n' +
+    '- Suporte e resistência\n' +
+    '- Volume e momentum\n\n' +
+    'Responda APENAS em JSON válido com esta estrutura exata:\n' +
+    '{"sinal":"COMPRA" ou "VENDA" ou "NEUTRO","confianca":"Alta" ou "Média" ou "Baixa",' +
+    '"contexto":"análise do contexto de mercado",' +
+    '"indicadores":"resumo dos indicadores técnicos",' +
+    '"padroes":"padrões de candlestick identificados",' +
+    '"risco":"pontos de stop e gestão de risco",' +
+    '"recomendacao":"recomendação final detalhada"}\n\n' +
+    'IMPORTANTE: responda somente o JSON, sem markdown, sem texto adicional.';
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: selectedFile.type, data: selectedBase64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
     });
-  }
-  document.getElementById('ticker-track').innerHTML = html;
-})();
+    var data = await resp.json();
+    clearInterval(stepTimer);
 
-/* ════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════ */
-(function(){
-  var s = getSession();
-  if(s && s.email){
-    var access = checkAccess(s);
-    if(access.ok){
-      enterDashboard();
-    } else if(access.reason==='trial_expired'||access.reason==='expired'){
-      window.location.href = 'paywall.html';
-    } else {
-      showLanding();
-    }
-  } else {
-    showLanding();
+    var raw = data.content.map(function(b){ return b.text||''; }).join('');
+    var clean = raw.replace(/```json|```/g,'').trim();
+    var result = JSON.parse(clean);
+
+    showReport(result, asset);
+    addToHistory(result.sinal, asset, currentTF);
+  } catch(e) {
+    clearInterval(stepTimer);
+    document.getElementById('report-loading').style.display = 'none';
+    document.getElementById('report-empty').style.display = 'flex';
+    document.getElementById('report-status-text').textContent = 'ERRO NA ANÁLISE';
+    document.getElementById('report-dot').classList.remove('live');
+    document.getElementById('btn-analyze').disabled = false;
+    alert('Erro ao processar análise. Tente novamente.');
+    console.error(e);
   }
-})();
+};
+
+function showReport(r, asset) {
+  document.getElementById('report-loading').style.display = 'none';
+  document.getElementById('report-content').style.display = 'block';
+
+  var badge = document.getElementById('signal-badge');
+  badge.textContent = r.sinal;
+  badge.className = 'signal-badge ' + (r.sinal === 'COMPRA' ? 'compra' : r.sinal === 'VENDA' ? 'venda' : 'neutro');
+
+  document.getElementById('sig-asset').textContent = asset;
+  document.getElementById('sig-tf').textContent = currentTF;
+  document.getElementById('sig-confidence').textContent = r.confianca;
+
+  document.getElementById('rep-context').innerHTML = r.contexto;
+  document.getElementById('rep-indicators').innerHTML = r.indicadores;
+  document.getElementById('rep-patterns').innerHTML = r.padroes;
+  document.getElementById('rep-risk').innerHTML = r.risco;
+  document.getElementById('rep-final').innerHTML = r.recomendacao;
+
+  document.getElementById('report-status-text').textContent = 'ANÁLISE CONCLUÍDA';
+  document.getElementById('report-dot').classList.remove('live');
+  document.getElementById('btn-analyze').disabled = false;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  HISTÓRICO
+// ═══════════════════════════════════════════════════════════════════
+var HIST_KEY = 'mrgreen_history';
+function getHistory() { try { return JSON.parse(localStorage.getItem(HIST_KEY)) || []; } catch(e) { return []; } }
+function saveHistory(h) { localStorage.setItem(HIST_KEY, JSON.stringify(h)); }
+
+function addToHistory(sinal, asset, tf) {
+  var h = getHistory();
+  var now = new Date();
+  var timeStr = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  h.unshift({ sinal: sinal, asset: asset, tf: tf, time: timeStr, date: now.toLocaleDateString('pt-BR') });
+  if (h.length > 30) h = h.slice(0, 30);
+  saveHistory(h);
+  renderHistory();
+}
+
+function renderHistory() {
+  var h = getHistory();
+  var list = document.getElementById('history-list');
+  var empty = document.getElementById('history-empty');
+  if (!h.length) {
+    if (empty) empty.style.display = 'block';
+    var existing = list.querySelectorAll('.history-item');
+    existing.forEach(function(el){ el.remove(); });
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  list.innerHTML = '';
+  h.forEach(function(item) {
+    var cls = item.sinal === 'COMPRA' ? 'compra' : item.sinal === 'VENDA' ? 'venda' : 'neutro';
+    var el = document.createElement('div');
+    el.className = 'history-item';
+    el.innerHTML =
+      '<span class="hi-signal ' + cls + '">' + item.sinal + '</span>' +
+      '<div><div class="hi-asset">' + item.asset + '</div><div class="hi-tf">' + item.tf + '</div></div>' +
+      '<span class="hi-time">' + item.time + '</span>';
+    list.appendChild(el);
+  });
+}
+
+window.clearHistory = function() {
+  if (confirm('Limpar todo o histórico?')) {
+    localStorage.removeItem(HIST_KEY);
+    renderHistory();
+  }
+};
+
+// Init
+renderHistory();
+document.getElementById('mg-em') && document.getElementById('mg-em').addEventListener('keydown', function(e){ if(e.key==='Enter') window.MgLogin(); });
 </script>
 </body>
 </html>
