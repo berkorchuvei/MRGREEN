@@ -530,10 +530,7 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:4rem}
       <label>E-mail</label>
       <input type="email" id="inp-email" placeholder="seu@email.com" autocomplete="email">
     </div>
-    <div class="field">
-      <label>Senha</label>
-      <input type="password" id="inp-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()">
-    </div>
+<!-- senha removida -->
 
     <button class="btn-submit" id="btn-auth" onclick="doAuth()">Entrar</button>
     <div class="auth-msg" id="auth-msg"></div>
@@ -632,91 +629,69 @@ function setAuthLoading(on){
 async function doAuth(){
   var name  = (document.getElementById('inp-name')||{}).value||'';
   var email = document.getElementById('inp-email').value.trim().toLowerCase();
-  var pass  = document.getElementById('inp-pass').value;
   setAuthMsg('','');
 
   if(authMode==='register'){
     if(!name.trim()){ setAuthMsg('Informe seu nome.','err'); return; }
     if(!email||email.indexOf('@')<0){ setAuthMsg('E-mail inválido.','err'); return; }
-    if(pass.length<6){ setAuthMsg('Senha deve ter pelo menos 6 caracteres.','err'); return; }
     setAuthLoading(true);
     try {
-      var r = await sb.auth.signUp({ email:email, password:pass, options:{ data:{ name:name.trim() } } });
-      if(r.error) throw r.error;
-
-      var trialStart = Date.now();
-      localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:trialStart, version:1 }));
+      // Check if already registered
+      var chk = await fetch(SB_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=email,plan',
+        {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      var ex = await chk.json();
+      if(ex && ex.length > 0){
+        setAuthMsg('E-mail já cadastrado. Use "Entrar".','err');
+        setAuthLoading(false); return;
+      }
+      // Start trial
+      localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:Date.now(), version:1 }));
       localStorage.setItem(SESSION_KEY, JSON.stringify({ email:email, name:name.trim(), plan:'trial', checked:Date.now() }));
-
-      // Try inserting into users table (non-blocking)
-      sb.from('users').upsert({ id:r.data.user.id, email:email, name:name.trim(), plan:'trial' }, { onConflict:'email' }).then(function(){}).catch(function(){});
-
+      // Save to users table (non-blocking)
+      fetch(SB_URL+'/rest/v1/users', {
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({ email:email, name:name.trim(), plan:'trial', activated_at:new Date().toISOString() })
+      }).catch(function(){});
       setAuthMsg('Conta criada! Carregando...','ok');
       setTimeout(function(){ closeAuth(); enterDashboard(); }, 900);
     } catch(e){
-      setAuthMsg(translateError(e.message),'err');
+      setAuthMsg('Erro ao criar conta. Tente novamente.','err');
       setAuthLoading(false);
     }
 
   } else {
     if(!email||email.indexOf('@')<0){ setAuthMsg('E-mail inválido.','err'); return; }
-    if(!pass){ setAuthMsg('Informe sua senha.','err'); return; }
     setAuthLoading(true);
     try {
-      // Try Supabase Auth first
-      var r = await sb.auth.signInWithPassword({ email:email, password:pass });
-      if(r.error) throw r.error;
-
-      // Fetch user plan from users table
-      var uRes = await sb.from('users').select('*').eq('email',email).maybeSingle();
-      var u = uRes.data;
-
-      if(u){
-        if(u.plan==='trial'){
-          var existingTrial = getTrial();
-          if(!existingTrial){
-            var ts = u.trial_starts_at ? new Date(u.trial_starts_at).getTime() : Date.now();
-            localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:ts, version:1 }));
-          }
-        }
-        localStorage.setItem(SESSION_KEY, JSON.stringify({
-          email:u.email, name:u.name||email.split('@')[0], plan:u.plan,
-          expires_at:u.expires_at||null, checked:Date.now()
-        }));
-      } else {
-        // Fallback: no users table record
-        if(!getTrial()) localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:Date.now(), version:1 }));
-        localStorage.setItem(SESSION_KEY, JSON.stringify({ email:email, plan:'trial', checked:Date.now() }));
+      var res = await fetch(SB_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=*',
+        {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      var rows = await res.json();
+      var u = rows && rows.length > 0 ? rows[0] : null;
+      if(!u){
+        setAuthMsg('E-mail não encontrado. Crie uma conta primeiro.','err');
+        setAuthLoading(false); return;
       }
-
+      // Restore trial timer if plan is trial
+      if(u.plan==='trial'||!u.plan){
+        if(!getTrial()){
+          var ts = u.activated_at ? new Date(u.activated_at).getTime() : Date.now();
+          localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:ts, version:1 }));
+        }
+      }
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        email:u.email, name:u.name||email.split('@')[0], plan:u.plan||'trial',
+        expires_at:u.expires_at||null, checked:Date.now()
+      }));
       setAuthMsg('Acesso liberado! Carregando...','ok');
       setTimeout(function(){ closeAuth(); enterDashboard(); }, 800);
     } catch(e){
-      // Fallback: legacy email-only login (for users without password)
-      try {
-        var uRes2 = await sb.from('users').select('*').eq('email',email).maybeSingle();
-        var u2 = uRes2.data;
-        if(u2 && (u2.plan==='monthly'||u2.plan==='lifetime')){
-          if(u2.plan==='trial'){
-            if(!getTrial()) localStorage.setItem(TRIAL_KEY, JSON.stringify({ start:Date.now(), version:1 }));
-          }
-          localStorage.setItem(SESSION_KEY, JSON.stringify({
-            email:u2.email, name:u2.name||'', plan:u2.plan,
-            expires_at:u2.expires_at||null, checked:Date.now()
-          }));
-          setAuthMsg('Acesso liberado!','ok');
-          setTimeout(function(){ closeAuth(); enterDashboard(); }, 800);
-          return;
-        }
-      } catch(_){}
-      setAuthMsg(translateError(e.message),'err');
+      setAuthMsg('Erro de conexão. Tente novamente.','err');
       setAuthLoading(false);
     }
   }
-}
 
 function doLogout(){
-  sb.auth.signOut().catch(function(){});
   localStorage.removeItem(SESSION_KEY);
   localStorage.removeItem(TRIAL_KEY);
   showLanding();
