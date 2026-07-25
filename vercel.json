@@ -1,0 +1,9 @@
+{
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "framework": null,
+  "rewrites": [
+    { "source": "/paywall", "destination": "/paywall.html" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}
