@@ -2,6 +2,9 @@
   "buildCommand": null,
   "outputDirectory": ".",
   "framework": null,
-  "cleanUrls": true,
-  "trailingSlash": false
+  "functions": {
+    "api/signal.js": {
+      "maxDuration": 45
+    }
+  }
 }
