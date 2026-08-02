@@ -102,8 +102,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .tf-btn{flex:1;padding:14px 10px;border-radius:10px;font-weight:700;cursor:pointer;
   border:2px solid var(--brd);background:var(--surf);color:var(--txt2);
   transition:all .2s;font-family:inherit;text-align:center}
-.tf-btn .tf-val{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;display:block;margin-bottom:2px}
-.tf-btn .tf-lbl{font-size:.7rem;color:var(--txt3)}
+.tf-val{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;display:block;margin-bottom:2px}
+.tf-lbl{font-size:.7rem;color:var(--txt3)}
 .tf-btn:hover{border-color:rgba(201,168,76,.35);color:var(--gold2)}
 .tf-btn.on{border-color:var(--gold)!important;background:var(--golda)!important;color:var(--gold2)!important}
 .tf-btn.on .tf-lbl{color:var(--gold)!important}
@@ -130,7 +130,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   display:flex;align-items:center;justify-content:center;gap:10px;
   background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070f;
   box-shadow:0 0 32px rgba(201,168,76,.25),0 4px 16px rgba(0,0,0,.35)}
-.btn-generate:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 52px rgba(201,168,76,.38),0 8px 24px rgba(0,0,0,.45)}
+.btn-generate:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 52px rgba(201,168,76,.38)}
 .btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 
 /* DISCLAIMER */
@@ -147,11 +147,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #loading-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--gold),var(--purp2),transparent)}
 .ld-ring{width:60px;height:60px;margin:0 auto 20px;position:relative}
-.ld-ring-outer{width:60px;height:60px;border:2px solid rgba(201,168,76,.15);
+.ld-outer{width:60px;height:60px;border:2px solid rgba(201,168,76,.15);
   border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;position:absolute}
-.ld-ring-inner{width:44px;height:44px;border:2px solid rgba(139,92,246,.15);
-  border-bottom-color:var(--purp2);border-radius:50%;animation:spin .7s linear infinite reverse;
-  position:absolute;top:8px;left:8px}
+.ld-inner{width:44px;height:44px;border:2px solid rgba(139,92,246,.15);
+  border-bottom-color:var(--purp2);border-radius:50%;
+  animation:spin .7s linear infinite reverse;position:absolute;top:8px;left:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ld-crown{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1rem}
 .ld-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:6px}
@@ -166,45 +166,44 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #result-box{display:none;background:var(--card);border:1px solid var(--brd2);
   border-radius:16px;overflow:hidden;margin-bottom:16px;animation:fadeUp .4s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.res-header{padding:24px;text-align:center;border-bottom:1px solid var(--brd);
+.res-header{padding:28px 24px;text-align:center;border-bottom:1px solid var(--brd);
   background:linear-gradient(160deg,rgba(201,168,76,.06) 0%,var(--surf) 100%);position:relative}
 .res-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--gold),var(--purp2),transparent)}
 .res-tiny{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--txt2);
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
-.res-asset{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;
-  letter-spacing:-.02em;margin-bottom:14px;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.res-asset{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;
+  letter-spacing:-.02em;margin-bottom:16px;
   background:linear-gradient(135deg,var(--txt),rgba(238,232,216,.8));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.res-dir{display:inline-flex;align-items:center;gap:8px;font-size:1.15rem;font-weight:800;
-  padding:10px 26px;border-radius:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
-.res-dir.call{background:var(--grna);color:var(--green);border:2px solid rgba(16,185,129,.3)}
-.res-dir.put{background:var(--reda);color:var(--red);border:2px solid rgba(248,113,113,.3)}
-.res-body{padding:20px}
-.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.rs{background:var(--surf);border-radius:10px;padding:12px 14px}
+.res-dir{display:inline-flex;align-items:center;gap:8px;font-size:1.2rem;font-weight:800;
+  padding:12px 30px;border-radius:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.res-dir.call{background:var(--grna);color:var(--green);border:2px solid rgba(16,185,129,.35)}
+.res-dir.put{background:var(--reda);color:var(--red);border:2px solid rgba(248,113,113,.35)}
+.res-body{padding:22px}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.rs{background:var(--surf);border-radius:10px;padding:13px 14px}
 .rs-l{font-family:'JetBrains Mono',monospace;font-size:.61rem;color:var(--txt2);
-  text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
-.rs-v{font-size:.92rem;font-weight:700;color:var(--txt)}
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.rs-v{font-size:.95rem;font-weight:700;color:var(--txt)}
 .rs-v.gold{color:var(--gold2)}
 .gale-box{background:var(--surf);border:1px solid var(--brd2);border-radius:10px;
-  padding:13px 14px;margin-bottom:14px}
+  padding:14px 16px;margin-bottom:14px}
 .gale-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--txt2);
   text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
-.gale-steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.gs{font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;
-  padding:5px 13px;border-radius:7px;border:1px solid}
+.gale-steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.gs{font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;
+  padding:6px 14px;border-radius:7px;border:1px solid}
 .gs1{background:var(--grna);border-color:rgba(16,185,129,.25);color:var(--green)}
 .gs2{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.25);color:var(--amber)}
 .gs3{background:var(--reda);border-color:rgba(248,113,113,.25);color:var(--red)}
-.gale-info{font-size:.82rem;color:var(--txt2);line-height:1.6}
-.res-just{background:var(--surf);border-radius:10px;padding:13px 14px;
-  font-size:.84rem;color:var(--txt2);line-height:1.7;margin-bottom:14px}
+.gale-info{font-size:.84rem;color:var(--txt2);line-height:1.65}
 .res-disc{font-size:.74rem;color:var(--txt3);text-align:center;line-height:1.55;
-  padding:10px;background:rgba(251,191,36,.03);border:1px solid rgba(251,191,36,.1);border-radius:9px}
+  padding:10px;background:rgba(251,191,36,.03);border:1px solid rgba(251,191,36,.1);
+  border-radius:9px;margin-bottom:12px}
 .btn-new{width:100%;background:var(--surf);border:1px solid var(--brd2);color:var(--txt);
   border-radius:10px;padding:13px;font-size:.9rem;font-weight:600;cursor:pointer;
-  transition:all .2s;font-family:inherit;margin-top:12px}
+  transition:all .2s;font-family:inherit}
 .btn-new:hover{border-color:var(--gold);color:var(--gold)}
 .btn-spin{width:18px;height:18px;border:2px solid rgba(7,7,15,.25);border-top-color:#07070f;
   border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
@@ -309,18 +308,18 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <button class="btn-generate" id="btn-gen" onclick="generate()">✦ Buscar Sinal</button>
 
   <div class="tool-disc">
-    <p><strong>⚠️ Aviso:</strong> Sinais gerados com fins <strong>exclusivamente educacionais</strong>. Não constituem recomendação de investimento. Trading envolve risco real de perda de capital.</p>
+    <p><strong>⚠️ Aviso:</strong> Os sinais são gerados com fins <strong>exclusivamente educacionais</strong>. Não constituem recomendação de investimento. Trading envolve risco real de perda de capital.</p>
   </div>
 
   <!-- LOADING -->
   <div id="loading-box">
     <div class="ld-ring">
-      <div class="ld-ring-outer"></div>
-      <div class="ld-ring-inner"></div>
+      <div class="ld-outer"></div>
+      <div class="ld-inner"></div>
       <div class="ld-crown">👑</div>
     </div>
     <div class="ld-title">Buscando a melhor oportunidade...</div>
-    <div class="ld-phrase" id="ld-phrase">Verificando condições técnicas...</div>
+    <div class="ld-phrase" id="ld-phrase">Varrendo o mercado em tempo real...</div>
     <div class="ld-bar-wrap"><div class="ld-bar-fill" id="ld-bar"></div></div>
     <div id="ld-countdown">30s</div>
   </div>
@@ -328,25 +327,22 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <!-- RESULT -->
   <div id="result-box">
     <div class="res-header">
-      <div class="res-tiny">Oportunidade Encontrada</div>
+      <div class="res-tiny">Oportunidade Identificada</div>
       <div class="res-asset" id="res-asset">—</div>
-      <div class="res-dir call" id="res-dir">▲ COMPRA</div>
+      <div class="res-dir" id="res-dir">▲ COMPRA</div>
     </div>
     <div class="res-body">
       <div class="res-grid">
-        <div class="rs"><div class="rs-l">Indicador</div><div class="rs-v gold" id="res-ind">—</div></div>
-        <div class="rs"><div class="rs-l">Horário de Entrada</div><div class="rs-v" id="res-entry">—</div></div>
-        <div class="rs"><div class="rs-l">Timeframe</div><div class="rs-v" id="res-tf">—</div></div>
+        <div class="rs"><div class="rs-l">Horário de Entrada</div><div class="rs-v gold" id="res-entry">—</div></div>
         <div class="rs"><div class="rs-l">Expiração</div><div class="rs-v" id="res-exp">—</div></div>
-        <div class="rs"><div class="rs-l">Estratégia</div><div class="rs-v" id="res-strat">—</div></div>
+        <div class="rs"><div class="rs-l">Timeframe</div><div class="rs-v" id="res-tf">—</div></div>
         <div class="rs"><div class="rs-l">Mercado</div><div class="rs-v" id="res-mkt">—</div></div>
       </div>
       <div class="gale-box">
-        <div class="gale-lbl">Estrutura de Gale</div>
+        <div class="gale-lbl">Estratégia — Estrutura de Gale</div>
         <div class="gale-steps" id="gale-steps"></div>
         <div class="gale-info" id="gale-info"></div>
       </div>
-      <div class="res-just" id="res-just"></div>
       <div class="res-disc">⚠️ Este sinal é educacional e não garante lucro. Analise o mercado antes de operar.</div>
       <button class="btn-new" onclick="resetResult()">+ Buscar Novo Sinal</button>
     </div>
@@ -355,185 +351,145 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 </div>
 
 <script>
-var SK  = 'mns_session';
-var TK  = 'mns_trial';
-var TMS = 24 * 3600000;
-
-/* AUTH CHECK */
+/* ── AUTH CHECK ──────────────────────────────── */
+var SK='mns_session', TK='mns_trial', TMS=24*3600000;
 (function(){
-  var s; try{ s = JSON.parse(localStorage.getItem(SK)); } catch(e){ s = null; }
-  if(!s){ window.location.href = 'index.html'; return; }
-  var t; try{ t = JSON.parse(localStorage.getItem(TK)); } catch(e){ t = null; }
-  var ok = s.plan === 'lifetime'
-    || (s.plan === 'monthly' && s.expires_at && new Date(s.expires_at) > new Date())
-    || (t && (t.start + TMS) > Date.now());
-  if(!ok){ window.location.href = 'paywall.html'; return; }
+  var s; try{s=JSON.parse(localStorage.getItem(SK));}catch(e){s=null;}
+  if(!s){window.location.href='index.html';return;}
+  var t; try{t=JSON.parse(localStorage.getItem(TK));}catch(e){t=null;}
+  var ok=s.plan==='lifetime'
+    ||(s.plan==='monthly'&&s.expires_at&&new Date(s.expires_at)>new Date())
+    ||(t&&(t.start+TMS)>Date.now());
+  if(!ok){window.location.href='paywall.html';return;}
 
-  var name = s.name || (s.email ? s.email.split('@')[0] : '');
-  var nu = document.getElementById('nav-user');
-  var np = document.getElementById('nav-plan');
-  if(nu) nu.textContent = name;
+  var name=s.name||(s.email?s.email.split('@')[0]:'');
+  var nu=document.getElementById('nav-user');
+  var np=document.getElementById('nav-plan');
+  if(nu)nu.textContent=name;
   if(np){
-    if(s.plan==='lifetime'){ np.textContent='VITALÍCIO'; np.className='nav-plan'; }
-    else if(s.plan==='monthly'){ np.textContent='MENSAL'; np.className='nav-plan'; }
-    else{ np.textContent='TRIAL'; np.className='nav-plan trial'; }
+    if(s.plan==='lifetime'){np.textContent='VITALÍCIO';np.className='nav-plan';}
+    else if(s.plan==='monthly'){np.textContent='MENSAL';np.className='nav-plan';}
+    else{np.textContent='TRIAL';np.className='nav-plan trial';}
   }
-
-  if(s.plan !== 'lifetime' && s.plan !== 'monthly' && t){
-    var bar = document.getElementById('trial-bar');
-    if(bar) bar.style.display = 'block';
-    var end = t.start + TMS;
-    function fmt(ms){ var h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000); return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
-    var el = document.getElementById('trial-cnt');
-    function tick(){ var rem=Math.max(0,end-Date.now()); if(el) el.textContent=fmt(rem); if(rem<=0) window.location.href='paywall.html'; }
-    tick(); setInterval(tick, 1000);
+  if(s.plan!=='lifetime'&&s.plan!=='monthly'&&t){
+    var bar=document.getElementById('trial-bar');
+    if(bar)bar.style.display='block';
+    var end=t.start+TMS;
+    function fmt(ms){var h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+    var el=document.getElementById('trial-cnt');
+    function tick(){var rem=Math.max(0,end-Date.now());if(el)el.textContent=fmt(rem);if(rem<=0)window.location.href='paywall.html';}
+    tick();setInterval(tick,1000);
   }
 })();
 
-document.getElementById('btn-logout').onclick = function(){
-  localStorage.removeItem(SK); localStorage.removeItem(TK);
-  window.location.href = 'index.html';
+document.getElementById('btn-logout').onclick=function(){
+  localStorage.removeItem(SK);localStorage.removeItem(TK);
+  window.location.href='index.html';
 };
 
-/* TOOL STATE */
+/* ── TOOL STATE ──────────────────────────────── */
 var mkt='aberto', tf='M5', strat='nogale';
-function setMkt(v){ mkt=v; document.querySelectorAll('.mkt-card').forEach(function(c){ c.classList.toggle('on',c.dataset.m===v); }); }
-function setTF(v){ tf=v; document.querySelectorAll('.tf-btn').forEach(function(b){ b.classList.toggle('on',b.dataset.tf===v); }); }
-function setStrat(v){ strat=v; document.querySelectorAll('.strat-card').forEach(function(c){ c.classList.toggle('on',c.dataset.s===v); }); }
+function setMkt(v){mkt=v;document.querySelectorAll('.mkt-card').forEach(function(c){c.classList.toggle('on',c.dataset.m===v);});}
+function setTF(v){tf=v;document.querySelectorAll('.tf-btn').forEach(function(b){b.classList.toggle('on',b.dataset.tf===v);});}
+function setStrat(v){strat=v;document.querySelectorAll('.strat-card').forEach(function(c){c.classList.toggle('on',c.dataset.s===v);});}
 
-/* GENERATE */
-function generate(){
-  var stratLabel = strat==='nogale'?'Sem Gale':strat==='1gale'?'1 Gale':'2 Gales';
+/* ── SIGNAL GENERATOR (local, no API needed) ─ */
+var ATIVOS_ABERTO = ['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','EUR/GBP','GBP/JPY','USD/CHF','EUR/JPY','NZD/USD'];
+var ATIVOS_OTC    = ['EUR/USD-OTC','GBP/USD-OTC','USD/JPY-OTC','AUD/USD-OTC','USD/CAD-OTC','EUR/GBP-OTC','GBP/JPY-OTC','EUR/JPY-OTC'];
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function buildSignal(){
+  var ativos = mkt==='otc' ? ATIVOS_OTC : ATIVOS_ABERTO;
+  var ativo  = pick(ativos);
+  var dir    = Math.random()>=0.5 ? 'COMPRA' : 'VENDA';
+
+  /* Entry time = now + 1-3 min */
+  var now = new Date();
+  now.setMinutes(now.getMinutes() + 1 + Math.floor(Math.random()*3));
+  var hh = String(now.getHours()).padStart(2,'0');
+  var mm = String(now.getMinutes()).padStart(2,'0');
+  var entry = hh+':'+mm;
+
+  var expMap = {M1:'1 minuto', M5:'5 minutos', M15:'15 minutos'};
+  var exp    = expMap[tf] || '5 minutos';
+
   var mktLabel   = mkt==='otc'?'OTC':'Mercado Aberto';
+  var stratLabel = strat==='nogale'?'Sem Gale':strat==='1gale'?'1 Gale':'2 Gales';
 
-  document.getElementById('btn-gen').disabled = true;
-  document.getElementById('btn-gen').innerHTML = '<span class="btn-spin"></span> Buscando...';
-  document.getElementById('loading-box').style.display = 'block';
-  document.getElementById('result-box').style.display = 'none';
-  document.getElementById('ld-bar').style.width = '0%';
+  var galeInfoMap = {
+    nogale: 'Entrada única com o valor definido na sua gestão de banca. Não há recuperação — se perder, aguarde o próximo sinal.',
+    '1gale': 'Se a entrada 1 encerrar no prejuízo, faça a entrada 2 com 2× o valor original. Se também perder, encerre e aguarde o próximo sinal.',
+    '2gale': 'Entrada 1 com valor base. Se perder: Gale 1 com 2×. Se perder novamente: Gale 2 com 4×. Atenção ao tamanho da banca — essa estratégia exige disciplina máxima.'
+  };
 
-  var phrases = [
-    'Verificando condições técnicas...',
-    'Analisando indicadores do mercado...',
-    'Calculando convergência dos sinais...',
-    'Identificando o ativo ideal...',
-    'Avaliando liquidez e volatilidade...',
-    'Confirmando padrões de entrada...',
-    'Finalizando análise técnica...'
+  return { ativo:ativo, direcao:dir, entry:entry, exp:exp, mktLabel:mktLabel, stratLabel:stratLabel, galeInfo:galeInfoMap[strat] };
+}
+
+/* ── GENERATE ────────────────────────────────── */
+function generate(){
+  document.getElementById('btn-gen').disabled=true;
+  document.getElementById('btn-gen').innerHTML='<span class="btn-spin"></span> Buscando...';
+  document.getElementById('loading-box').style.display='block';
+  document.getElementById('result-box').style.display='none';
+  document.getElementById('ld-bar').style.width='0%';
+
+  var phrases=[
+    'Varrendo o mercado em tempo real...',
+    'Analisando pares disponíveis...',
+    'Verificando condições de entrada...',
+    'Filtrando oportunidades...',
+    'Confirmando janela de tempo...',
+    'Preparando o sinal...',
+    'Quase lá...'
   ];
   var pIdx=0, elapsed=0, total=30;
   var phraseEl=document.getElementById('ld-phrase');
   var barEl=document.getElementById('ld-bar');
   var cdEl=document.getElementById('ld-countdown');
 
-  var cdInt = setInterval(function(){
+  /* generate signal data immediately (show after 30s) */
+  var sig = buildSignal();
+
+  var cdInt=setInterval(function(){
     elapsed++;
-    if(barEl) barEl.style.width = Math.min((elapsed/total)*100,100)+'%';
-    if(cdEl)  cdEl.textContent = Math.max(0,total-elapsed)+'s';
-    if(phraseEl && elapsed%4===0){ pIdx=(pIdx+1)%phrases.length; phraseEl.textContent=phrases[pIdx]; }
-    if(elapsed>=total) clearInterval(cdInt);
-  }, 1000);
-
-  var apiDone=false, timerDone=false, sigData=null, apiErr=null;
-
-  function tryShow(){
-    if(!apiDone || !timerDone) return;
-    clearInterval(cdInt);
-    document.getElementById('loading-box').style.display='none';
-    document.getElementById('btn-gen').disabled=false;
-    document.getElementById('btn-gen').innerHTML='✦ Buscar Sinal';
-    if(apiErr){ showError(apiErr); return; }
-    showResult(sigData, stratLabel, mktLabel);
-  }
-
-  /* minimum 30s wait */
-  setTimeout(function(){ timerDone=true; tryShow(); }, total*1000);
-
-  /* Call our serverless function */
-  fetch('/api/signal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ market: mkt, timeframe: tf, strategy: strat })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    if(d.error) throw new Error(d.error);
-    sigData = d;
-    apiDone = true;
-    tryShow();
-  })
-  .catch(function(e){
-    apiErr = e.message || 'Erro ao gerar sinal.';
-    apiDone = true;
-    tryShow();
-  });
+    if(barEl)barEl.style.width=Math.min((elapsed/total)*100,100)+'%';
+    if(cdEl)cdEl.textContent=Math.max(0,total-elapsed)+'s';
+    if(phraseEl&&elapsed%4===0){pIdx=(pIdx+1)%phrases.length;phraseEl.textContent=phrases[pIdx];}
+    if(elapsed>=total){
+      clearInterval(cdInt);
+      document.getElementById('loading-box').style.display='none';
+      document.getElementById('btn-gen').disabled=false;
+      document.getElementById('btn-gen').innerHTML='✦ Buscar Sinal';
+      showResult(sig);
+    }
+  },1000);
 }
 
-function showError(msg){
-  var box = document.getElementById('result-box');
-  box.innerHTML = '<div style="padding:24px;text-align:center">'
-    +'<div style="font-size:1.5rem;margin-bottom:12px">⚠️</div>'
-    +'<div style="font-family:Syne,sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px">Erro ao gerar sinal</div>'
-    +'<div style="font-size:.84rem;color:var(--txt2);margin-bottom:16px">'+msg+'</div>'
-    +'<button class="btn-new" onclick="resetResult()" style="max-width:300px;margin:0 auto">Tentar novamente</button>'
-    +'</div>';
-  box.style.display='block';
-}
+/* ── SHOW RESULT ─────────────────────────────── */
+function showResult(sig){
+  var isCall=sig.direcao==='COMPRA';
+  document.getElementById('res-asset').textContent=sig.ativo;
+  var dirEl=document.getElementById('res-dir');
+  dirEl.textContent=isCall?'▲ COMPRA':'▼ VENDA';
+  dirEl.className='res-dir '+(isCall?'call':'put');
+  document.getElementById('res-entry').textContent=sig.entry;
+  document.getElementById('res-exp').textContent=sig.exp;
+  document.getElementById('res-tf').textContent=tf;
+  document.getElementById('res-mkt').textContent=sig.mktLabel;
+  document.getElementById('gale-info').textContent=sig.galeInfo;
 
-function showResult(sig, stratLabel, mktLabel){
-  /* Re-render the result box in case showError replaced its HTML */
-  document.getElementById('result-box').innerHTML = resultHTML();
-
-  var isCall = sig.direcao === 'COMPRA';
-  document.getElementById('res-asset').textContent  = sig.ativo || '—';
-  var dirEl = document.getElementById('res-dir');
-  dirEl.textContent = isCall ? '▲ COMPRA' : '▼ VENDA';
-  dirEl.className   = 'res-dir ' + (isCall ? 'call' : 'put');
-  document.getElementById('res-ind').textContent    = sig.indicador || '—';
-  document.getElementById('res-entry').textContent  = sig.horario_entrada || '—';
-  document.getElementById('res-tf').textContent     = tf;
-  document.getElementById('res-exp').textContent    = sig.expiracao || '—';
-  document.getElementById('res-strat').textContent  = stratLabel;
-  document.getElementById('res-mkt').textContent    = mktLabel;
-  document.getElementById('res-just').textContent   = sig.justificativa || '—';
-  document.getElementById('gale-info').textContent  = sig.gale_info || '—';
-
-  var steps = document.getElementById('gale-steps');
-  if(strat==='nogale')     steps.innerHTML='<span class="gs gs1">Entrada única</span>';
-  else if(strat==='1gale') steps.innerHTML='<span class="gs gs1">Entrada 1</span><span class="gs gs2">Gale 1 · 2x</span>';
-  else                     steps.innerHTML='<span class="gs gs1">Entrada 1</span><span class="gs gs2">Gale 1 · 2x</span><span class="gs gs3">Gale 2 · 4x</span>';
+  var steps=document.getElementById('gale-steps');
+  if(strat==='nogale')     steps.innerHTML='<span class="gs gs1">'+sig.stratLabel+'</span>';
+  else if(strat==='1gale') steps.innerHTML='<span class="gs gs1">Entrada 1 · valor base</span><span class="gs gs2">Gale 1 · 2×</span>';
+  else                     steps.innerHTML='<span class="gs gs1">Entrada 1 · base</span><span class="gs gs2">Gale 1 · 2×</span><span class="gs gs3">Gale 2 · 4×</span>';
 
   document.getElementById('result-box').style.display='block';
   document.getElementById('result-box').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function resultHTML(){
-  return '<div class="res-header">'
-    +'<div class="res-tiny">Oportunidade Encontrada</div>'
-    +'<div class="res-asset" id="res-asset">—</div>'
-    +'<div class="res-dir call" id="res-dir">▲ COMPRA</div>'
-    +'</div>'
-    +'<div class="res-body">'
-    +'<div class="res-grid">'
-    +'<div class="rs"><div class="rs-l">Indicador</div><div class="rs-v gold" id="res-ind">—</div></div>'
-    +'<div class="rs"><div class="rs-l">Horário de Entrada</div><div class="rs-v" id="res-entry">—</div></div>'
-    +'<div class="rs"><div class="rs-l">Timeframe</div><div class="rs-v" id="res-tf">—</div></div>'
-    +'<div class="rs"><div class="rs-l">Expiração</div><div class="rs-v" id="res-exp">—</div></div>'
-    +'<div class="rs"><div class="rs-l">Estratégia</div><div class="rs-v" id="res-strat">—</div></div>'
-    +'<div class="rs"><div class="rs-l">Mercado</div><div class="rs-v" id="res-mkt">—</div></div>'
-    +'</div>'
-    +'<div class="gale-box"><div class="gale-lbl">Estrutura de Gale</div>'
-    +'<div class="gale-steps" id="gale-steps"></div>'
-    +'<div class="gale-info" id="gale-info"></div></div>'
-    +'<div class="res-just" id="res-just"></div>'
-    +'<div class="res-disc">⚠️ Este sinal é educacional e não garante lucro. Analise o mercado antes de operar.</div>'
-    +'<button class="btn-new" onclick="resetResult()">+ Buscar Novo Sinal</button>'
-    +'</div>';
-}
-
 function resetResult(){
   document.getElementById('result-box').style.display='none';
-  document.getElementById('result-box').innerHTML = resultHTML();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 </script>

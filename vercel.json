@@ -1,10 +1,5 @@
 {
   "buildCommand": null,
   "outputDirectory": ".",
-  "framework": null,
-  "functions": {
-    "api/signal.js": {
-      "maxDuration": 45
-    }
-  }
+  "framework": null
 }
