@@ -238,12 +238,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:26px 
 <body>
 
 <nav id="nav">
-  <a class="nav-brand" href="index.html">
+  <a class="nav-brand" href="javascript:history.back()">
     <div class="nav-crown">👑</div>
     <span class="nav-name">MonarcaSignal</span>
   </a>
   <div class="nav-right">
-    <a class="nav-btn" href="index.html">← Início</a>
+    <a class="nav-btn" href="app.html">← Voltar</a>
     <button class="nav-btn" onclick="openModal()">Entrar</button>
   </div>
 </nav>
@@ -448,11 +448,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:26px 
       <label>E-mail</label>
       <input type="email" id="inp-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <div class="field">
-      <label>Senha</label>
-      <input type="password" id="inp-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn-auth" id="btn-login" onclick="doLogin()">Entrar</button>
+    <button class="btn-auth" id="btn-login" onclick="doLogin()">Acessar a Ferramenta →</button>
     <div class="auth-msg" id="auth-msg"></div>
     <div style="text-align:center;margin-top:14px;font-size:.8rem;color:var(--txt2)">
       Não tem conta? <a href="index.html" style="color:var(--gold2);text-decoration:none;font-weight:600">Criar gratuitamente →</a>
@@ -485,52 +481,38 @@ function closeModal(){ document.getElementById('auth-modal').classList.remove('o
 document.getElementById('auth-modal').addEventListener('click', function(e){ if(e.target===this)closeModal(); });
 
 function setMsg(t, c){ var el=document.getElementById('auth-msg'); el.textContent=t; el.className='auth-msg '+(c||''); }
-function setLoading(on){ var b=document.getElementById('btn-login'); b.disabled=on; b.innerHTML=on?'<span class="auth-spin"></span> Verificando...':'Entrar'; }
+function setLoading(on){ var b=document.getElementById('btn-login'); b.disabled=on; b.innerHTML=on?'<span class="auth-spin"></span> Verificando...':'Acessar a Ferramenta →'; }
 
 async function doLogin(){
   var email = document.getElementById('inp-email').value.trim().toLowerCase();
-  var pass  = document.getElementById('inp-pass').value;
   setMsg('','');
   if(!email||email.indexOf('@')<0){ setMsg('E-mail inválido.','err'); return; }
-  if(!pass){ setMsg('Informe a senha.','err'); return; }
   setLoading(true);
   try{
-    var r = await sb.auth.signInWithPassword({ email, password: pass });
-    if(r.error) throw r.error;
-    var ud = await sb.from('users').select('*').eq('email', email).maybeSingle();
-    var u = ud.data;
+    var r = await fetch(SB_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=*',
+      {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var data = await r.json();
+    var u = data&&data.length>0?data[0]:null;
     if(u){
-      if(u.plan === 'trial'){
-        var existing = null; try{ existing = JSON.parse(localStorage.getItem(TK)); }catch{}
-        if(!existing){ localStorage.setItem(TK, JSON.stringify({ start: u.trial_starts_at ? new Date(u.trial_starts_at).getTime() : Date.now() })); }
+      if(u.plan==='trial'){
+        var existing=null;try{existing=JSON.parse(localStorage.getItem(TK));}catch{}
+        if(!existing){var ts=u.trial_starts_at?new Date(u.trial_starts_at).getTime():Date.now();localStorage.setItem(TK,JSON.stringify({start:ts}));}
       }
-      localStorage.setItem(SK, JSON.stringify({ email: u.email, name: u.name||'', plan: u.plan, expires_at: u.expires_at||null, checked: Date.now() }));
+      localStorage.setItem(SK,JSON.stringify({email:u.email,name:u.name||'',plan:u.plan,expires_at:u.expires_at||null,checked:Date.now()}));
     } else {
-      var t = null; try{ t = JSON.parse(localStorage.getItem(TK)); }catch{}
-      if(!t) localStorage.setItem(TK, JSON.stringify({ start: Date.now() }));
-      localStorage.setItem(SK, JSON.stringify({ email, plan: 'trial', checked: Date.now() }));
+      var now=Date.now();
+      localStorage.setItem(TK,JSON.stringify({start:now}));
+      localStorage.setItem(SK,JSON.stringify({email:email,plan:'trial',checked:now}));
+      fetch(SB_URL+'/rest/v1/users',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,plan:'trial',trial_starts_at:new Date().toISOString()})}).catch(function(){});
     }
     setMsg('Acesso liberado!','ok');
-    setTimeout(function(){ window.location.href = 'app.html'; }, 700);
+    setTimeout(function(){window.location.href='app.html';},700);
   } catch(e){
-    setMsg('E-mail ou senha incorretos.','err');
+    setMsg('Erro de conexão. Tente novamente.','err');
     setLoading(false);
   }
 }
 
-/* Check if already logged in with active access */
-(function(){
-  try{
-    var s = JSON.parse(localStorage.getItem(SK));
-    if(!s) return;
-    var t = JSON.parse(localStorage.getItem(TK)||'null');
-    var ok = false;
-    if(s.plan==='lifetime') ok=true;
-    else if(s.plan==='monthly'&&s.expires_at&&new Date(s.expires_at)>new Date()) ok=true;
-    else if(t&&(t.start+TMS)>Date.now()) ok=true;
-    if(ok) window.location.href = 'app.html';
-  }catch{}
-})();
 </script>
 </body>
 </html>
