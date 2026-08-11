@@ -218,6 +218,18 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .res-grid{grid-template-columns:1fr}
   .nav-user{display:none}
 }
+@media(max-width:420px){
+  #app-nav{padding:0 12px;gap:8px}
+  .nav-name{font-size:1rem}
+  .nav-btn{padding:6px 10px;font-size:.72rem}
+  .app-wrap{padding:24px 14px 60px}
+  .app-h1{font-size:1.9rem}
+  .cfg-card{padding:16px}
+  .strat-card{padding:13px 8px}
+  .sc-desc{display:none}
+  .res-header{padding:22px 16px}
+  .res-asset{font-size:1.7rem}
+}
 </style>
 </head>
 <body>
@@ -316,18 +328,27 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <p><strong>⚠️ Aviso:</strong> Os sinais são gerados com fins <strong>exclusivamente educacionais</strong>. Não constituem recomendação de investimento. Trading envolve risco real de perda de capital.</p>
   </div>
 
-  <!-- PLACAR PESSOAL (bookmarklet) -->
+  <!-- PLACAR PESSOAL -->
   <div class="cfg-card" id="placar-card">
     <div class="cfg-label"><div class="cfg-num">✦</div> Placar Pessoal (opcional)</div>
     <p style="font-size:.82rem;color:var(--txt2);line-height:1.65;margin-bottom:14px">
-      Um mini placar flutuante que você pode arrastar para qualquer lugar da tela, inclusive por cima da corretora, para marcar você mesmo se cada acompanhamento foi acerto ou erro. Ele roda 100% no seu navegador — os dados ficam salvos apenas localmente, no seu computador, e ninguém além de você tem acesso a eles.
+      Um placar simples para você mesmo marcar se cada acompanhamento foi acerto ou erro. Os dados ficam salvos apenas no seu navegador — ninguém mais tem acesso a eles.
     </p>
-    <a id="placar-bookmarklet" href="javascript:(function(){ if(document.getElementById('mgz-placar-widget')){ return; } var LS_KEY='mgz_placar_v1'; var st; try{ st=JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ st=null; } if(!st || typeof st!=='object'){ st={ win:0, loss:0, x:20, y:20 }; } var box=document.createElement('div'); box.id='mgz-placar-widget'; box.style.cssText='position:fixed;top:'+st.y+'px;left:'+st.x+'px;z-index:2147483647;' +'background:#0b0b18;border:1px solid #2a2a50;border-radius:14px;' +'font-family:system-ui,sans-serif;color:#eee8d8;box-shadow:0 8px 30px rgba(0,0,0,.5);' +'width:210px;user-select:none;overflow:hidden;'; box.innerHTML = '<div id=&quot;mgz-drag&quot; style=&quot;cursor:move;background:linear-gradient(135deg,#c9a84c,#e8c46a);' +'color:#07070f;font-weight:700;font-size:12px;padding:8px 10px;display:flex;' +'align-items:center;justify-content:space-between;&quot;>' +'<span>👑 Meu Placar</span><span id=&quot;mgz-close&quot; style=&quot;cursor:pointer;font-weight:800;padding:0 4px;&quot;>✕</span></div>' +'<div style=&quot;padding:12px;&quot;>' +'<div style=&quot;display:flex;justify-content:space-between;font-size:12px;color:#7a7a9a;margin-bottom:8px;&quot;>' +'<span>Acertos: <b id=&quot;mgz-win&quot; style=&quot;color:#10b981;&quot;></b></span>' +'<span>Erros: <b id=&quot;mgz-loss&quot; style=&quot;color:#f87171;&quot;></b></span></div>' +'<div style=&quot;text-align:center;font-size:11px;color:#7a7a9a;margin-bottom:10px;&quot;>' +'Taxa: <b id=&quot;mgz-rate&quot; style=&quot;color:#e8c46a;&quot;></b></div>' +'<div style=&quot;display:flex;gap:6px;margin-bottom:8px;&quot;>' +'<button id=&quot;mgz-btn-win&quot; style=&quot;flex:1;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);' +'color:#10b981;border-radius:8px;padding:8px 0;font-weight:700;cursor:pointer;font-size:12px;&quot;>+ Acerto</button>' +'<button id=&quot;mgz-btn-loss&quot; style=&quot;flex:1;background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.35);' +'color:#f87171;border-radius:8px;padding:8px 0;font-weight:700;cursor:pointer;font-size:12px;&quot;>+ Erro</button></div>' +'<button id=&quot;mgz-btn-reset&quot; style=&quot;width:100%;background:none;border:1px solid #2a2a50;color:#7a7a9a;' +'border-radius:8px;padding:6px 0;font-size:11px;cursor:pointer;&quot;>Zerar placar</button>' +'<div style=&quot;font-size:9px;color:#3a3a58;text-align:center;margin-top:8px;line-height:1.4;&quot;>' +'Placar 100% pessoal, salvo só neste navegador.<br>Ninguém mais tem acesso a ele.</div>' +'</div>'; document.body.appendChild(box); function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(st)); }catch(e){} } function render(){ document.getElementById('mgz-win').textContent = st.win; document.getElementById('mgz-loss').textContent = st.loss; var total = st.win + st.loss; var rate = total ? Math.round((st.win/total)*100) : 0; document.getElementById('mgz-rate').textContent = rate + '% (' + total + ')'; } render(); document.getElementById('mgz-btn-win').onclick=function(){ st.win++; save(); render(); }; document.getElementById('mgz-btn-loss').onclick=function(){ st.loss++; save(); render(); }; document.getElementById('mgz-btn-reset').onclick=function(){ if(confirm('Zerar seu placar pessoal?')){ st.win=0; st.loss=0; save(); render(); } }; document.getElementById('mgz-close').onclick=function(){ box.remove(); }; var drag=document.getElementById('mgz-drag'); var dragging=false, offX=0, offY=0; drag.addEventListener('mousedown', function(e){ dragging=true; offX=e.clientX-box.offsetLeft; offY=e.clientY-box.offsetTop; }); document.addEventListener('mousemove', function(e){ if(!dragging) return; st.x=e.clientX-offX; st.y=e.clientY-offY; box.style.left=st.x+'px'; box.style.top=st.y+'px'; }); document.addEventListener('mouseup', function(){ if(dragging){ dragging=false; save(); } }); })();"
-       class="btn-broker-top" style="margin-bottom:10px" onclick="return confirmDrag(event)">
-       📌 Meu Placar (arraste para a barra de favoritos)
+
+    <div id="placar-desktop">
+      <a id="placar-bookmarklet" href="#" class="btn-broker-top" style="margin-bottom:8px" onclick="return warnDrag(event)">
+        📌 Meu Placar (arraste para os favoritos)
+      </a>
+      <p style="font-size:.72rem;color:var(--txt3);line-height:1.6;margin-bottom:14px">
+        Arraste o botão para a barra de favoritos do navegador. Depois, clique nele em qualquer aba (inclusive na corretora) para abrir seu placar numa janelinha, que você pode posicionar em qualquer lugar da tela.
+      </p>
+    </div>
+
+    <a href="placar.html" target="_blank" rel="noopener" class="btn-new" style="display:block;text-align:center;text-decoration:none">
+      📊 Abrir Meu Placar em nova aba
     </a>
-    <p style="font-size:.72rem;color:var(--txt3);line-height:1.6">
-      Arraste o botão acima para a barra de favoritos do seu navegador. Depois, sempre que quiser acompanhar, clique nele em qualquer aba (inclusive na corretora) para abrir o placar flutuante. Cada usuário tem o seu próprio placar, guardado só no próprio navegador — não é compartilhado nem visível para mais ninguém, incluindo nós.
+    <p style="font-size:.72rem;color:var(--txt3);line-height:1.6;margin-top:10px" id="placar-mobile-note">
+      No celular, abra nessa nova aba e use o menu do navegador para <strong>adicionar à tela de início</strong> — assim você acessa seu placar quase como um app, com um toque, sem precisar voltar aqui.
     </p>
   </div>
 
@@ -403,11 +424,26 @@ var SK='mns_session', TK='mns_trial', TMS=24*3600000;
   }
 })();
 
-function confirmDrag(e){
+function warnDrag(e){
   e.preventDefault();
-  alert('Arraste este botão para a barra de favoritos do navegador (não clique). Depois é só clicar nele em qualquer aba para abrir seu placar pessoal.');
+  alert('Arraste este botão para a barra de favoritos do navegador (não clique). Depois é só clicar nele em qualquer aba para abrir seu placar numa janelinha.');
   return false;
 }
+
+/* build bookmarklet with THIS site's own origin baked in, so it always
+   points to the same placar.html regardless of which tab it's clicked from */
+(function(){
+  var target = window.location.origin + '/placar.html';
+  var code = "(function(){var w=window.open('"+target+"','mgzPlacarWin','width=320,height=600,left=80,top=80,resizable=yes,scrollbars=yes');if(w)w.focus();})();";
+  var link = document.getElementById('placar-bookmarklet');
+  if(link) link.href = 'javascript:' + encodeURIComponent(code);
+
+  /* on touch devices, dragging to bookmarks bar isn't practical — hide that option */
+  if(window.matchMedia && window.matchMedia('(pointer:coarse)').matches){
+    var d = document.getElementById('placar-desktop');
+    if(d) d.style.display='none';
+  }
+})();
 
 document.getElementById('btn-logout').onclick=function(){
   localStorage.removeItem(SK);localStorage.removeItem(TK);
