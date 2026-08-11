@@ -65,7 +65,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* PLANS */
 .pw-plans{position:relative;z-index:1;padding:0 24px 64px}
 .pw-plans-inner{max-width:880px;margin:0 auto}
-.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:16px}
+@media(max-width:860px){.plans-grid{grid-template-columns:1fr}}
 .plan-c{background:var(--card);border:1px solid var(--brd);border-radius:22px;
   padding:32px 28px;position:relative;overflow:hidden;transition:all .3s}
 .plan-c::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
@@ -278,21 +279,37 @@ footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:26px 
         <button class="btn-o" onclick="goToPay('monthly')">Assinar Mensal →</button>
       </div>
 
-      <!-- VITALÍCIO -->
+      <!-- TRIMESTRAL -->
       <div class="plan-c feat">
         <div class="plan-best">✦ MAIS ESCOLHIDO</div>
-        <div class="plan-period">♾️ VITALÍCIO</div>
-        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">147</span></div>
-        <div class="plan-recur">pagamento único · acesso para sempre</div>
+        <div class="plan-period">🗓️ TRIMESTRAL</div>
+        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">154</span></div>
+        <div class="plan-recur">a cada 3 meses · renovação automática</div>
         <div class="plan-divider"></div>
         <ul class="plan-feats">
           <li>Tudo do plano Mensal</li>
+          <li><strong>Economize em relação ao mensal</strong></li>
+          <li>Sinais ilimitados por dia</li>
+          <li>Mercado Aberto e OTC</li>
+          <li>Suporte prioritário</li>
+        </ul>
+        <button class="btn-g" onclick="goToPay('quarterly')">Assinar Trimestral →</button>
+      </div>
+
+      <!-- VITALÍCIO -->
+      <div class="plan-c">
+        <div class="plan-period">♾️ VITALÍCIO</div>
+        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">247</span></div>
+        <div class="plan-recur">pagamento único · acesso para sempre</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats">
+          <li>Tudo do plano Trimestral</li>
           <li><strong>Sem mensalidade — para sempre</strong></li>
           <li>Todas as atualizações futuras inclusas</li>
           <li>Suporte prioritário</li>
-          <li>Melhor custo-benefício</li>
+          <li>Melhor custo-benefício a longo prazo</li>
         </ul>
-        <button class="btn-g" onclick="goToPay('lifetime')">Garantir Acesso Vitalício →</button>
+        <button class="btn-o" onclick="goToPay('lifetime')">Garantir Acesso Vitalício →</button>
       </div>
     </div>
 
@@ -466,8 +483,9 @@ var TMS = 24 * 3600000;
 var sb = supabase.createClient(SB_URL, SB_KEY);
 
 var LINKS = {
-  monthly:  'https://go.perfectpay.com.br/PPU38CQBAMQ',
-  lifetime: 'https://go.perfectpay.com.br/PPU38CQBAPC'
+  monthly:   'https://go.perfectpay.com.br/PPU38CQBAMQ',
+  quarterly: 'https://go.perfectpay.com.br/PPU38CQF2P0',
+  lifetime:  'https://go.perfectpay.com.br/PPU38CQBAPC'
 };
 
 function goToPay(plan){ window.location.href = LINKS[plan]; }

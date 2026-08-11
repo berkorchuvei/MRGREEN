@@ -89,6 +89,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .mkt-card:hover{border-color:rgba(201,168,76,.3)}
 .mkt-card.on{border-color:var(--gold)!important;background:var(--golda)!important}
 .mkt-card.on .mc-name{color:var(--gold2)!important}
+.mkt-card.disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.mkt-closed-note{display:none;font-size:.72rem;color:var(--amber);margin-top:8px;
+  background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);
+  border-radius:8px;padding:8px 10px;line-height:1.5}
 .mc-icon{font-size:1.5rem;margin-bottom:6px}
 .mc-name{font-size:.9rem;font-weight:700;color:var(--txt);margin-bottom:3px}
 .mc-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.65rem;
@@ -265,6 +269,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         <div class="mc-desc">Disponível fora do horário de bolsa, qualquer momento do dia.</div>
       </div>
     </div>
+    <div class="mkt-closed-note" id="mkt-closed-note">⏱ O mercado aberto (Forex) está fechado neste momento (fim de semana). Apenas o mercado OTC está disponível — ele funciona 24h, 7 dias por semana.</div>
   </div>
 
   <!-- 2. TIMEFRAME -->
@@ -309,6 +314,21 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
   <div class="tool-disc">
     <p><strong>⚠️ Aviso:</strong> Os sinais são gerados com fins <strong>exclusivamente educacionais</strong>. Não constituem recomendação de investimento. Trading envolve risco real de perda de capital.</p>
+  </div>
+
+  <!-- PLACAR PESSOAL (bookmarklet) -->
+  <div class="cfg-card" id="placar-card">
+    <div class="cfg-label"><div class="cfg-num">✦</div> Placar Pessoal (opcional)</div>
+    <p style="font-size:.82rem;color:var(--txt2);line-height:1.65;margin-bottom:14px">
+      Um mini placar flutuante que você pode arrastar para qualquer lugar da tela, inclusive por cima da corretora, para marcar você mesmo se cada acompanhamento foi acerto ou erro. Ele roda 100% no seu navegador — os dados ficam salvos apenas localmente, no seu computador, e ninguém além de você tem acesso a eles.
+    </p>
+    <a id="placar-bookmarklet" href="javascript:(function(){ if(document.getElementById('mgz-placar-widget')){ return; } var LS_KEY='mgz_placar_v1'; var st; try{ st=JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ st=null; } if(!st || typeof st!=='object'){ st={ win:0, loss:0, x:20, y:20 }; } var box=document.createElement('div'); box.id='mgz-placar-widget'; box.style.cssText='position:fixed;top:'+st.y+'px;left:'+st.x+'px;z-index:2147483647;' +'background:#0b0b18;border:1px solid #2a2a50;border-radius:14px;' +'font-family:system-ui,sans-serif;color:#eee8d8;box-shadow:0 8px 30px rgba(0,0,0,.5);' +'width:210px;user-select:none;overflow:hidden;'; box.innerHTML = '<div id=&quot;mgz-drag&quot; style=&quot;cursor:move;background:linear-gradient(135deg,#c9a84c,#e8c46a);' +'color:#07070f;font-weight:700;font-size:12px;padding:8px 10px;display:flex;' +'align-items:center;justify-content:space-between;&quot;>' +'<span>👑 Meu Placar</span><span id=&quot;mgz-close&quot; style=&quot;cursor:pointer;font-weight:800;padding:0 4px;&quot;>✕</span></div>' +'<div style=&quot;padding:12px;&quot;>' +'<div style=&quot;display:flex;justify-content:space-between;font-size:12px;color:#7a7a9a;margin-bottom:8px;&quot;>' +'<span>Acertos: <b id=&quot;mgz-win&quot; style=&quot;color:#10b981;&quot;></b></span>' +'<span>Erros: <b id=&quot;mgz-loss&quot; style=&quot;color:#f87171;&quot;></b></span></div>' +'<div style=&quot;text-align:center;font-size:11px;color:#7a7a9a;margin-bottom:10px;&quot;>' +'Taxa: <b id=&quot;mgz-rate&quot; style=&quot;color:#e8c46a;&quot;></b></div>' +'<div style=&quot;display:flex;gap:6px;margin-bottom:8px;&quot;>' +'<button id=&quot;mgz-btn-win&quot; style=&quot;flex:1;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);' +'color:#10b981;border-radius:8px;padding:8px 0;font-weight:700;cursor:pointer;font-size:12px;&quot;>+ Acerto</button>' +'<button id=&quot;mgz-btn-loss&quot; style=&quot;flex:1;background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.35);' +'color:#f87171;border-radius:8px;padding:8px 0;font-weight:700;cursor:pointer;font-size:12px;&quot;>+ Erro</button></div>' +'<button id=&quot;mgz-btn-reset&quot; style=&quot;width:100%;background:none;border:1px solid #2a2a50;color:#7a7a9a;' +'border-radius:8px;padding:6px 0;font-size:11px;cursor:pointer;&quot;>Zerar placar</button>' +'<div style=&quot;font-size:9px;color:#3a3a58;text-align:center;margin-top:8px;line-height:1.4;&quot;>' +'Placar 100% pessoal, salvo só neste navegador.<br>Ninguém mais tem acesso a ele.</div>' +'</div>'; document.body.appendChild(box); function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(st)); }catch(e){} } function render(){ document.getElementById('mgz-win').textContent = st.win; document.getElementById('mgz-loss').textContent = st.loss; var total = st.win + st.loss; var rate = total ? Math.round((st.win/total)*100) : 0; document.getElementById('mgz-rate').textContent = rate + '% (' + total + ')'; } render(); document.getElementById('mgz-btn-win').onclick=function(){ st.win++; save(); render(); }; document.getElementById('mgz-btn-loss').onclick=function(){ st.loss++; save(); render(); }; document.getElementById('mgz-btn-reset').onclick=function(){ if(confirm('Zerar seu placar pessoal?')){ st.win=0; st.loss=0; save(); render(); } }; document.getElementById('mgz-close').onclick=function(){ box.remove(); }; var drag=document.getElementById('mgz-drag'); var dragging=false, offX=0, offY=0; drag.addEventListener('mousedown', function(e){ dragging=true; offX=e.clientX-box.offsetLeft; offY=e.clientY-box.offsetTop; }); document.addEventListener('mousemove', function(e){ if(!dragging) return; st.x=e.clientX-offX; st.y=e.clientY-offY; box.style.left=st.x+'px'; box.style.top=st.y+'px'; }); document.addEventListener('mouseup', function(){ if(dragging){ dragging=false; save(); } }); })();"
+       class="btn-broker-top" style="margin-bottom:10px" onclick="return confirmDrag(event)">
+       📌 Meu Placar (arraste para a barra de favoritos)
+    </a>
+    <p style="font-size:.72rem;color:var(--txt3);line-height:1.6">
+      Arraste o botão acima para a barra de favoritos do seu navegador. Depois, sempre que quiser acompanhar, clique nele em qualquer aba (inclusive na corretora) para abrir o placar flutuante. Cada usuário tem o seu próprio placar, guardado só no próprio navegador — não é compartilhado nem visível para mais ninguém, incluindo nós.
+    </p>
   </div>
 
   <!-- LOADING -->
@@ -358,7 +378,7 @@ var SK='mns_session', TK='mns_trial', TMS=24*3600000;
   if(!s){window.location.href='index.html';return;}
   var t; try{t=JSON.parse(localStorage.getItem(TK));}catch(e){t=null;}
   var ok=s.plan==='lifetime'
-    ||(s.plan==='monthly'&&s.expires_at&&new Date(s.expires_at)>new Date())
+    ||((s.plan==='monthly'||s.plan==='quarterly')&&s.expires_at&&new Date(s.expires_at)>new Date())
     ||(t&&(t.start+TMS)>Date.now());
   if(!ok){window.location.href='paywall.html';return;}
 
@@ -368,10 +388,11 @@ var SK='mns_session', TK='mns_trial', TMS=24*3600000;
   if(nu)nu.textContent=name;
   if(np){
     if(s.plan==='lifetime'){np.textContent='VITALÍCIO';np.className='nav-plan';}
+    else if(s.plan==='quarterly'){np.textContent='TRIMESTRAL';np.className='nav-plan';}
     else if(s.plan==='monthly'){np.textContent='MENSAL';np.className='nav-plan';}
     else{np.textContent='TRIAL';np.className='nav-plan trial';}
   }
-  if(s.plan!=='lifetime'&&s.plan!=='monthly'&&t){
+  if(s.plan!=='lifetime'&&s.plan!=='monthly'&&s.plan!=='quarterly'&&t){
     var bar=document.getElementById('trial-bar');
     if(bar)bar.style.display='block';
     var end=t.start+TMS;
@@ -382,14 +403,55 @@ var SK='mns_session', TK='mns_trial', TMS=24*3600000;
   }
 })();
 
+function confirmDrag(e){
+  e.preventDefault();
+  alert('Arraste este botão para a barra de favoritos do navegador (não clique). Depois é só clicar nele em qualquer aba para abrir seu placar pessoal.');
+  return false;
+}
+
 document.getElementById('btn-logout').onclick=function(){
   localStorage.removeItem(SK);localStorage.removeItem(TK);
   window.location.href='index.html';
 };
 
+/* ── HORÁRIO DE MERCADO ──────────────────────── */
+/* Forex "mercado aberto" funciona 24h, de domingo 22:00 UTC até sexta 22:00 UTC.
+   Fora dessa janela (fim de semana), só o mercado OTC está disponível. */
+function isForexOpen(){
+  var now = new Date();
+  var day = now.getUTCDay(); // 0=domingo ... 6=sábado
+  var hour = now.getUTCHours();
+  if(day===6) return false; // sábado inteiro fechado
+  if(day===0 && hour<22) return false; // domingo antes das 22h UTC fechado
+  if(day===5 && hour>=22) return false; // sexta a partir das 22h UTC fechado
+  return true;
+}
+
+function updateMarketAvailability(){
+  var open = isForexOpen();
+  var abertoCard = document.querySelector('.mkt-card[data-m="aberto"]');
+  var otcCard = document.querySelector('.mkt-card[data-m="otc"]');
+  var noteEl = document.getElementById('mkt-closed-note');
+  if(!abertoCard) return;
+
+  if(!open){
+    abertoCard.classList.add('disabled');
+    abertoCard.setAttribute('aria-disabled','true');
+    if(mkt==='aberto'){ mkt='otc'; if(otcCard) otcCard.classList.add('on'); abertoCard.classList.remove('on'); }
+    if(noteEl) noteEl.style.display='block';
+  } else {
+    abertoCard.classList.remove('disabled');
+    abertoCard.removeAttribute('aria-disabled');
+    if(noteEl) noteEl.style.display='none';
+  }
+}
+
 /* ── TOOL STATE ──────────────────────────────── */
 var mkt='aberto', tf='M5', strat='nogale';
-function setMkt(v){mkt=v;document.querySelectorAll('.mkt-card').forEach(function(c){c.classList.toggle('on',c.dataset.m===v);});}
+function setMkt(v){
+  if(v==='aberto' && !isForexOpen()) return; /* bloqueia seleção de mercado fechado */
+  mkt=v;document.querySelectorAll('.mkt-card').forEach(function(c){c.classList.toggle('on',c.dataset.m===v);});
+}
 function setTF(v){tf=v;document.querySelectorAll('.tf-btn').forEach(function(b){b.classList.toggle('on',b.dataset.tf===v);});}
 function setStrat(v){strat=v;document.querySelectorAll('.strat-card').forEach(function(c){c.classList.toggle('on',c.dataset.s===v);});}
 
@@ -398,6 +460,9 @@ var ATIVOS_ABERTO = ['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','EUR/GBP'
 var ATIVOS_OTC    = ['EUR/USD-OTC','GBP/USD-OTC','USD/JPY-OTC','AUD/USD-OTC','USD/CAD-OTC','EUR/GBP-OTC','GBP/JPY-OTC','EUR/JPY-OTC'];
 
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+updateMarketAvailability();
+setInterval(updateMarketAvailability, 60000);
 
 function buildSignal(){
   var ativos = mkt==='otc' ? ATIVOS_OTC : ATIVOS_ABERTO;

@@ -173,7 +173,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .step-card p{font-size:.83rem;color:var(--txt2);line-height:1.62}
 
 /* PLANS */
-.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:860px;margin:0 auto 16px}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:1000px;margin:0 auto 16px}
+@media(max-width:860px){.plans-grid{grid-template-columns:1fr}}
 .plan-card{background:var(--card);border:1px solid var(--brd);border-radius:20px;
   padding:32px 26px;position:relative;overflow:hidden;transition:all .3s}
 .plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
@@ -415,14 +416,24 @@ footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:26px 
     </div>
     <div class="plan-card featured">
       <div class="plan-best">✦ MAIS ESCOLHIDO</div>
+      <div class="plan-period">🗓️ TRIMESTRAL</div>
+      <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">154</span></div>
+      <div class="plan-recur">a cada 3 meses · renovação automática</div>
+      <ul class="plan-feats">
+        <li>Tudo do plano Mensal</li><li><strong>Economize em relação ao mensal</strong></li>
+        <li>Sinais ilimitados</li><li>Suporte prioritário</li>
+      </ul>
+      <button class="btn-plan-g" onclick="window.location.href='paywall.html'">Assinar Trimestral →</button>
+    </div>
+    <div class="plan-card">
       <div class="plan-period">♾️ VITALÍCIO</div>
-      <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">147</span></div>
+      <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">247</span></div>
       <div class="plan-recur">pagamento único · acesso para sempre</div>
       <ul class="plan-feats">
-        <li>Tudo do plano Mensal</li><li><strong>Sem mensalidade — para sempre</strong></li>
+        <li>Tudo do plano Trimestral</li><li><strong>Sem mensalidade — para sempre</strong></li>
         <li>Todas as atualizações futuras</li><li>Suporte prioritário</li>
       </ul>
-      <button class="btn-plan-g" onclick="window.location.href='paywall.html'">Garantir Vitalício →</button>
+      <button class="btn-plan-o" onclick="window.location.href='paywall.html'">Garantir Vitalício →</button>
     </div>
   </div>
   <p class="plans-note">🔒 Pagamento seguro via PerfectPay · Pix, cartão e boleto · Acesso imediato</p>
@@ -519,7 +530,7 @@ async function doAuth(){
     if (user) {
       /* Existing user — check access */
       var active = user.plan === 'lifetime'
-        || (user.plan === 'monthly' && user.expires_at && new Date(user.expires_at) > new Date());
+        || ((user.plan === 'monthly' || user.plan === 'quarterly') && user.expires_at && new Date(user.expires_at) > new Date());
       var inTrial = user.plan === 'trial';
 
       if (!active && !inTrial) {
@@ -584,7 +595,7 @@ async function doAuth(){
     if (!s) return;
     var t = JSON.parse(localStorage.getItem(TK) || 'null');
     var ok = s.plan === 'lifetime'
-      || (s.plan === 'monthly' && s.expires_at && new Date(s.expires_at) > new Date())
+      || ((s.plan === 'monthly' || s.plan === 'quarterly') && s.expires_at && new Date(s.expires_at) > new Date())
       || (t && (t.start + TMS) > Date.now());
     if (ok) window.location.href = 'app.html';
   } catch(e){}
