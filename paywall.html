@@ -295,11 +295,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:26px 
       <div class="plan-c feat">
         <div class="plan-best">✦ MAIS ESCOLHIDO</div>
         <div class="plan-period">🗓️ TRIMESTRAL</div>
-        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">154</span></div>
+        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">194</span></div>
         <div class="plan-recur">a cada 3 meses · renovação automática</div>
         <div class="plan-divider"></div>
         <ul class="plan-feats">
           <li>Tudo do plano Mensal</li>
+          <li><strong>3 meses pelo preço de 2!</strong></li>
           <li><strong>Economize em relação ao mensal</strong></li>
           <li>Sinais ilimitados por dia</li>
           <li>Mercado Aberto e OTC</li>
@@ -308,21 +309,20 @@ footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:26px 
         <button class="btn-g" onclick="goToPay('quarterly')">Assinar Trimestral →</button>
       </div>
 
-      <!-- VITALÍCIO -->
+      <!-- SEMESTRAL -->
       <div class="plan-c">
-        <div class="plan-period">♾️ VITALÍCIO</div>
-        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">24,80</span><span class="plan-installment">em 12x</span></div>
-        <div class="plan-cash">ou <strong>R$ 247,00</strong> à vista</div>
-        <div class="plan-recur">pagamento único · acesso para sempre</div>
+        <div class="plan-period">♾️ SEMESTRAL</div>
+        <div class="plan-price"><span class="plan-cur">R$</span><span class="plan-amt">397</span></div>
+         <div class="plan-recur">a cada 6 meses · renovação automática</div>
         <div class="plan-divider"></div>
         <ul class="plan-feats">
           <li>Tudo do plano Trimestral</li>
-          <li><strong>Sem mensalidade — para sempre</strong></li>
+          <li><strong>6 meses pelo preço de 4!</strong></li>
+          <li><strong>Melhor custo benefício</strong></li>
           <li>Todas as atualizações futuras inclusas</li>
           <li>Suporte prioritário</li>
-          <li>Melhor custo-benefício a longo prazo</li>
         </ul>
-        <button class="btn-o" onclick="goToPay('lifetime')">Garantir Acesso Vitalício →</button>
+        <button class="btn-o" onclick="goToPay('lifetime')">Garantir Acesso Semestral →</button>
       </div>
     </div>
 
@@ -501,7 +501,7 @@ var sb = supabase.createClient(SB_URL, SB_KEY);
 var LINKS = {
   monthly:   'https://go.perfectpay.com.br/PPU38CQBAMQ',
   quarterly: 'https://go.perfectpay.com.br/PPU38CQF2P0',
-  lifetime:  'https://go.perfectpay.com.br/PPU38CQBAPC'
+  lifetime:  'https://go.perfectpay.com.br/PPU38CQFNCB'
 };
 
 function goToPay(plan){ window.location.href = LINKS[plan]; }
