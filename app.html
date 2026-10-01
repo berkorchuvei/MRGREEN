@@ -33,21 +33,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:var(--surf);border:1px solid rgba(79,143,245,.4);
   display:flex;align-items:center;justify-content:center;font-size:.9rem;
   color:var(--gold2)}
-.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
-.nav-user{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--txt2)}
-.nav-plan{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;
-  padding:3px 10px;border-radius:2px;background:var(--golda);
-  border:1px solid rgba(79,143,245,.25);color:var(--gold2)}
-.nav-plan.trial{background:var(--purpa);border-color:rgba(139,92,246,.25);color:var(--purp2)}
-.nav-btn{background:none;border:1px solid var(--brd2);color:var(--txt2);border-radius:2px;
-  padding:6px 13px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;
-  text-decoration:none;font-family:inherit;display:inline-flex;align-items:center;white-space:nowrap}
-.nav-btn:hover{border-color:var(--gold);color:var(--gold)}
-
-/* TRIAL BAR */
-#trial-bar{background:rgba(124,58,237,.07);border-bottom:1px solid rgba(124,58,237,.15);
-  padding:9px;text-align:center;font-size:.76rem;font-family:'JetBrains Mono',monospace;color:var(--purp2)}
-#trial-bar a{color:var(--gold2);font-weight:700;text-decoration:none}
 
 /* MAIN */
 .app-wrap{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:36px 20px 80px}
@@ -275,13 +260,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .mkt-grid,.tf-row{gap:7px}
   .strat-grid{grid-template-columns:1fr}
   .res-grid{grid-template-columns:1fr}
-  .nav-user{display:none}
 }
 @media(max-width:420px){
   #app-nav{padding:0 10px;gap:6px}
   .nav-name{font-size:.95rem}
-  .nav-plan{display:none}
-  .nav-btn{padding:6px 8px;font-size:.68rem}
   .app-wrap{padding:24px 14px 60px}
   .app-h1{font-size:1.9rem}
   .cfg-card{padding:16px}
@@ -295,25 +277,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 <body>
 
 <nav id="app-nav">
-  <a class="nav-brand" href="index.html">
+  <a class="nav-brand" href="app.html">
     <div class="nav-crown"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
       <path d="M3 17L9 11L13 15L21 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M15 6H21V12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg></div>
     <span class="nav-name">Mr.Green</span>
   </a>
-  <div class="nav-right">
-    <span class="nav-user" id="nav-user"></span>
-    <span class="nav-plan" id="nav-plan"></span>
-    <a class="nav-btn" href="paywall.html">Planos</a>
-    <button class="nav-btn" id="btn-logout">Sair</button>
-  </div>
 </nav>
-
-<div id="trial-bar" style="display:none">
-  ⏱ Trial gratuito — <strong><span id="trial-cnt">24:00:00</span></strong> restantes
-  &nbsp;·&nbsp; <a href="paywall.html">Assinar agora →</a>
-</div>
 
 <div class="app-wrap">
 
@@ -386,11 +357,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <span class="mi-label">Biblioteca de Aulas</span>
       <span class="mi-arrow">→</span>
     </a>
-    <a href="placar.html" target="_blank" rel="noopener" class="menu-item">
-      <span class="mi-icon mi-gold">📊</span>
-      <span class="mi-label">Meu Placar</span>
-      <span class="mi-arrow">→</span>
-    </a>
   </div>
 
   <!-- LOADING -->
@@ -437,38 +403,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 </div>
 
 <script>
-/* ── AUTH CHECK ──────────────────────────────── */
-var SK='mns_session', TK='mns_trial', TMS=24*3600000;
-(function(){
-  var s; try{s=JSON.parse(localStorage.getItem(SK));}catch(e){s=null;}
-  if(!s){window.location.href='index.html';return;}
-  var t; try{t=JSON.parse(localStorage.getItem(TK));}catch(e){t=null;}
-  var ok=s.plan==='lifetime'
-    ||((s.plan==='monthly'||s.plan==='quarterly')&&s.expires_at&&new Date(s.expires_at)>new Date())
-    ||(t&&(t.start+TMS)>Date.now());
-  if(!ok){window.location.href='paywall.html';return;}
-
-  var name=s.name||(s.email?s.email.split('@')[0]:'');
-  var nu=document.getElementById('nav-user');
-  var np=document.getElementById('nav-plan');
-  if(nu)nu.textContent=name;
-  if(np){
-    if(s.plan==='lifetime'){np.textContent='VITALÍCIO';np.className='nav-plan';}
-    else if(s.plan==='quarterly'){np.textContent='TRIMESTRAL';np.className='nav-plan';}
-    else if(s.plan==='monthly'){np.textContent='MENSAL';np.className='nav-plan';}
-    else{np.textContent='TRIAL';np.className='nav-plan trial';}
-  }
-  if(s.plan!=='lifetime'&&s.plan!=='monthly'&&s.plan!=='quarterly'&&t){
-    var bar=document.getElementById('trial-bar');
-    if(bar)bar.style.display='block';
-    var end=t.start+TMS;
-    function fmt(ms){var h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-    var el=document.getElementById('trial-cnt');
-    function tick(){var rem=Math.max(0,end-Date.now());if(el)el.textContent=fmt(rem);if(rem<=0)window.location.href='paywall.html';}
-    tick();setInterval(tick,1000);
-  }
-})();
-
 /* ── HORÁRIO DE MERCADO ──────────────────────── */
 /* Forex funciona 24h, de domingo 22:00 UTC até sexta 22:00 UTC.
    Cripto funciona 24/7, sem restrição de horário. */
@@ -538,10 +472,6 @@ function setMkt(v){
 }
 function setTF(v){tf=v;document.querySelectorAll('.tf-btn').forEach(function(b){b.classList.toggle('on',b.dataset.tf===v);});}
 
-document.getElementById('btn-logout').onclick=function(){
-  localStorage.removeItem(SK);localStorage.removeItem(TK);
-  window.location.href='index.html';
-};
 
 /* ── SIGNAL GENERATOR (local, no API needed) ─ */
 var ATIVOS_OTC = ['EUR/USD-OTC','GBP/USD-OTC','USD/JPY-OTC','AUD/USD-OTC','USD/CAD-OTC','EUR/GBP-OTC','GBP/JPY-OTC','EUR/JPY-OTC'];

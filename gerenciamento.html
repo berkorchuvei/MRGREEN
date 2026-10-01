@@ -219,17 +219,6 @@ html,body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sa
 </div>
 
 <script>
-var SK='mns_session', TK='mns_trial', TMS=24*3600000;
-(function(){
-  var s; try{s=JSON.parse(localStorage.getItem(SK));}catch(e){s=null;}
-  if(!s){window.location.href='index.html';return;}
-  var t; try{t=JSON.parse(localStorage.getItem(TK));}catch(e){t=null;}
-  var ok=s.plan==='lifetime'
-    ||((s.plan==='monthly'||s.plan==='quarterly')&&s.expires_at&&new Date(s.expires_at)>new Date())
-    ||(t&&(t.start+TMS)>Date.now());
-  if(!ok){window.location.href='paywall.html';return;}
-})();
-
 /* ── CONFIG COMPARTILHADA (via localStorage) ─── */
 var CFG_KEY = 'mgz_config';
 function loadCfg(){
